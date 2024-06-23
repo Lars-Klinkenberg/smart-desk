@@ -10,11 +10,10 @@ class Runntime:
         
         i=0
         # controller needs more than one short input to react
-        # should work with about 15 iterations
-        while i!= 20:
+        # should work with about 15 iterations but sometimes it needs more to react. 
+        while i!= 40:
             i = i+1
-            # TODO check if it works better with higher delays  
-            sleep(0.03)
+            sleep(0.02)
             serial.write("DOWN") 
             
         while True:

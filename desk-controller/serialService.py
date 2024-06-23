@@ -30,6 +30,6 @@ class SerialService:
             self.writeStringToSerial(HEX_STRING_UP)
         elif status == "DOWN":
             self.writeStringToSerial(HEX_STRING_DOWN)
-        elif status == "DEFAULT":
+        else:
             self.writeStringToSerial(HEX_STRING_EMPTY)
                 
