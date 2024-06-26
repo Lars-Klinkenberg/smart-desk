@@ -3,82 +3,82 @@ from converterService import ConverterService
 from time import sleep
 from gpioService import GpioService
 
+
 class Runntime:
     # controller needs more than one short input to react
-    # should work with about 15 iterations but sometimes it needs more to react. 
+    # should work with about 15 iterations but sometimes it needs more to react.
     WRITING_ITERATIONS = 50
 
     # Stop conditions
     STANDING_HEIGHT = 115
     SITTING_HEIGHT = 74
-    
+
     def __init__(self):
         self.serial = SerialService()
-        self.gpioService = GpioService()
+        self.gpio_service = GpioService()
         self.converter = ConverterService()
-        
+
     # moves the desk to the given direction
     # TODO: detect if desk is not moving and handle it
-    def moveDesk(self, direction):
+    def move_desk(self, direction):
         print("Moving desk to position: " + direction)
-        
-        self.gpioService.setRxOn()
+
+        self.gpio_service.set_rx_on()
         i = 0
 
         # send direction signal
-        while i!= self.WRITING_ITERATIONS:
-            i = i+1
+        while i != self.WRITING_ITERATIONS:
+            i = i + 1
             sleep(0.02)
-            self.serial.writeStatus(direction)
+            self.serial.write_status(direction)
 
         height = 0
-        startedHeightAdjustment = False
-        
-        # write default while height is changing
-        while (not self.maxHeightReached(height)) or not startedHeightAdjustment:
-            self.serial.writeStatus("DEFAULT")
-        
-            # read current height data and iterate over chunks
-            temp = self.converter.splitInValidChunks(self.serial.read())
-            for t in temp:
-                height = self.converter.convertHexArrToNumber(t)
+        started_height_adjustment = False
 
-                # only count valid heights                
+        # write default while height is changing
+        while (not self.max_height_reached(height)) or not started_height_adjustment:
+            self.serial.write_status("DEFAULT")
+
+            # read current height data and iterate over chunks
+            temp = self.converter.split_in_valid_chunks(self.serial.read())
+            for t in temp:
+                height = self.converter.convert_hex_arr_to_number(t)
+
+                # only count valid heights
                 if height <= 0:
                     continue
-                
+
                 # if height is fist time not equal to sitting and standing height
                 if (height != self.SITTING_HEIGHT) and (height != self.STANDING_HEIGHT):
-                    startedHeightAdjustment = True
-                    
-                    
-        print(f"Moved desk to height: {height}")
-        self.gpioService.setRxOff()
+                    started_height_adjustment = True
 
-    # closes all connections        
+        print(f"Moved desk to height: {height}")
+        self.gpio_service.set_rx_off()
+
+    # closes all connections
     def stop(self):
-        self.serial.closeConnection()
-        self.gpioService.setRxOff()
-    
+        self.serial.close_connection()
+        self.gpio_service.set_rx_off()
+
     # check if height is equal to sitting or standing height
-    def maxHeightReached(self, height):
+    def max_height_reached(self, height):
         if height == self.SITTING_HEIGHT:
             return True
         if height == self.STANDING_HEIGHT:
             return True
-        
+
         return False
-    
+
     # move the desk up or down depending on the current position
-    def toggleDesk(self):
+    def toggle_desk(self):
         # TODO: implement logic
         pass
-        
-    
+
+
 rt = Runntime()
 
 try:
-    rt.moveDesk("DOWN")
+    rt.move_desk("DOWN")
 except KeyboardInterrupt:
     pass
 finally:
