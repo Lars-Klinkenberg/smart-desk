@@ -7,7 +7,9 @@ This is a personal project to control my standing desk using a Raspberry Pi 4. T
 - Preset Heights: Save and recall preset desk heights.
 - User-Friendly Interface: Control the desk through a web interface.
 
-
 ## Hardware information
 - motor controller id - Wp-cb01
 - Desk interface circuit board id - Dcu_g-PRT5G
+
+# Setup information
+- Serial Ports on the Raspberry must be enabled
