@@ -4,6 +4,9 @@ from time import sleep
 from gpioService import GpioService
 
 class Runntime:
+    # controller needs more than one short input to react
+    # should work with about 15 iterations but sometimes it needs more to react. 
+    WRITING_ITERATIONS = 50
     def start(self):
         print("STARTING RUNTIME")
         
@@ -13,12 +16,11 @@ class Runntime:
 
         gpioService.setRxOn()
         i=0
-        # controller needs more than one short input to react
-        # should work with about 15 iterations but sometimes it needs more to react. 
-        while i!= 40:
+
+        while i!= self.WRITING_ITERATIONS:
             i = i+1
             sleep(0.02)
-            serial.writeStatus("UP")
+            serial.writeStatus("DOWN")
         
         # write default while height is changing
         latestHeights = []
@@ -31,7 +33,8 @@ class Runntime:
                     print(f"Current height: {height}")
 
                     latestHeights.append(height)
-        
+        print("FINISHED WRITING.")
+        print(latestHeights)
         gpioService.setRxOff()
         
 

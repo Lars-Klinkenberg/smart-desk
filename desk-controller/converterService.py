@@ -43,6 +43,14 @@ class ConverterService:
         data1 = self.hex_to_number(hexArr[2])
         data2 = self.hex_to_number(hexArr[3])
         
+        if(data0 == -1):
+            return 0
+        if(data1 == -1):
+            return 0
+        if(data2 == -1):
+            return 0
+        
+        
         got_height = 0.0
     
         # get decimal
@@ -53,21 +61,46 @@ class ConverterService:
         got_height = data0 * 100 + data1 * 10 + data2
         
         # TODO: calc sum for numbers under 100cm
-        
+        maxHeight = 150
+        if(got_height > maxHeight):
+            got_height = got_height / 10
+
         return got_height
     
     #turns an hex value into a number (0-9)
     def hex_to_number(self, segment):
-    # Map values to numbers
-        SEGMENT_MAP = ["3f", "06", "5b", "4f", "67", "6d", "7d", "07", "7f", "6f"]
+        # 8 bit to 7 Segment so first bit can be 0 or 1
+        SEGMENT_DICT = {
+            "3f" : 0,
+            "bf" : 0,
+            "06" : 1,
+            "86" : 1,
+            "5b" : 2,
+            "db" : 2,
+            "4f" : 3,
+            "cf" : 3,
+            "66" : 4,
+            "e6" : 4,
+            "6d" : 5,
+            "ed" : 5,
+            "7d" : 6,
+            "fd" : 6,
+            "07" : 7,
+            "87" : 7,
+            "7f" : 8,
+            "ff" : 8,
+            "6f" : 9,
+            "ef" : 9
+        }
         try:
-            return SEGMENT_MAP.index(segment)
+            # return SEGMENT_MAP.index(segment)
+            return SEGMENT_DICT[segment]
         except:
             return -1
         
     # returns false if avg of latestMeasurements is in tolerance to the last element in latestMeasurements
-    def isHeightChanging(self, latestMeasurements, tolerance = 1):
-        if(len(latestMeasurements) < 100):
+    def isHeightChanging(self, latestMeasurements, neededMeasurements = 100 , tolerance = 1):
+        if(len(latestMeasurements) < neededMeasurements):
             return True
         else:
             latestMeasurements.pop(0)
