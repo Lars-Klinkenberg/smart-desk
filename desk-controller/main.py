@@ -18,15 +18,20 @@ class Runntime:
         while i!= 40:
             i = i+1
             sleep(0.02)
-            serial.writeStatus("DOWN")
+            serial.writeStatus("UP")
         
-        i = 0
-        # TODO: end with height
-        while i!= 100:
+        # write default while height is changing
+        latestHeights = []
+        while converter.isHeightChanging(latestHeights):
             serial.writeStatus("DEFAULT")
-            print(converter.splitInValidChunks(serial.read()))
-            sleep(0.03)
-            i += 1
+            temp = converter.splitInValidChunks(serial.read())
+            for t in temp:
+                height = converter.convertHexArrToNumber(t)
+                if height != 0:
+                    print(f"Current height: {height}")
+
+                    latestHeights.append(height)
+        
         gpioService.setRxOff()
         
 
