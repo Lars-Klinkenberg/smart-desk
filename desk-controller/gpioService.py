@@ -5,7 +5,6 @@ class GpioService:
     
     def __init__(self):
         GPIO.setmode (GPIO.BCM)
-        GPIO.setwarnings(False)
         GPIO.setup (self.PIN_RELAY, GPIO.OUT)
         
     def setRxOff(self):

@@ -9,6 +9,7 @@ class Runntime:
         
         serial = SerialService()
         gpioService = GpioService()
+        converter = ConverterService()
 
         gpioService.setRxOn()
         i=0
@@ -23,6 +24,7 @@ class Runntime:
         # TODO: end with height
         while i!= 100:
             serial.writeStatus("DEFAULT")
+            print(converter.splitInValidChunks(serial.read()))
             sleep(0.03)
             i += 1
         gpioService.setRxOff()
