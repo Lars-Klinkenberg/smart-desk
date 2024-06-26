@@ -34,3 +34,6 @@ class SerialService:
     
     def write(self, data):
         self.ser.write(data)
+
+    def closeConnection(self):
+        self.ser.close()

@@ -31,24 +31,24 @@ class ConverterService:
     def convertHexArrToNumber(self, hexArr):
 
         if(len(hexArr) < 5):
-            return 0
+            return -1
 
         if(hexArr[0] != "5a"):
-            return 0
+            return -1
     
         if((hexArr[1] == "00") & (hexArr[2] == "00") &( hexArr[3] == "00")):
-            return 0
+            return -1
         
         data0 = self.hex_to_number(hexArr[1])
         data1 = self.hex_to_number(hexArr[2])
         data2 = self.hex_to_number(hexArr[3])
         
         if(data0 == -1):
-            return 0
+            return -1
         if(data1 == -1):
-            return 0
+            return -1
         if(data2 == -1):
-            return 0
+            return -1
         
         
         got_height = 0.0
@@ -98,24 +98,3 @@ class ConverterService:
         except:
             return -1
         
-    # returns false if avg of latestMeasurements is in tolerance to the last element in latestMeasurements
-    def isHeightChanging(self, latestMeasurements, neededMeasurements = 100 , tolerance = 1):
-        if(len(latestMeasurements) < neededMeasurements):
-            return True
-        else:
-            latestMeasurements.pop(0)
-        
-        last_height = latestMeasurements.pop()
-        avg = sum(latestMeasurements) / len(latestMeasurements)
-        
-        if(avg < last_height):
-            return last_height - tolerance >= avg
-        
-        if(avg > last_height):
-            return last_height + tolerance <= avg
-        
-        if(avg == last_height):
-            return False
-        
-        # return default
-        return True
