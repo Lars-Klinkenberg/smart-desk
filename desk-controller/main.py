@@ -40,14 +40,7 @@ class Runntime:
             self.serial.write_status("DEFAULT")
 
             # read current height data and iterate over chunks
-            temp = self.converter.split_in_valid_chunks(self.serial.read())
-            for t in temp:
-                height = self.converter.convert_hex_arr_to_number(t)
-
-                # only count valid heights
-                if height <= 0:
-                    continue
-
+            for t in self.getDeskHeight():
                 # if height is fist time not equal to sitting and standing height
                 if (height != self.SITTING_HEIGHT) and (height != self.STANDING_HEIGHT):
                     started_height_adjustment = True
@@ -73,6 +66,53 @@ class Runntime:
     def toggle_desk(self):
         # TODO: implement logic
         pass
+
+    # returns statzs: UP or DOWN or UNDEFINED
+    def deskStatus(self):
+        heights = self.getDeskHeight()
+
+        if len(heights) <= 0:
+            return "UNDEFINED"
+
+        height = sum(heights) / len(heights)
+
+        if height == self.SITTING_HEIGHT:
+            return "DOWN"
+
+        if height == self.STANDING_HEIGHT:
+            return "UP"
+
+        return "UNDEFINED"
+
+    # returns a list of measured heights
+    def getDeskHeight(self):
+        # read current height data and iterate over chunks
+        temp = self.converter.split_in_valid_chunks(self.serial.read())
+        all_heights = []
+        for t in temp:
+            height = self.converter.convert_hex_arr_to_number(t)
+
+            # only count valid heights
+            if height <= 0:
+                continue
+
+            all_heights.append(self.converter.convert_hex_arr_to_number(t))
+
+        return all_heights
+
+    def getCurrentHeight(self):
+        rt.gpio_service.set_rx_on()
+
+        gotHeight = True
+        while gotHeight:
+            rt.serial.activateDesk()
+            height = rt.getDeskHeight()
+            print("TEST ", height)
+
+            if height:
+                gotHeight = False
+
+        return height
 
 
 rt = Runntime()

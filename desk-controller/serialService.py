@@ -4,9 +4,12 @@ from time import sleep
 BAUD_RATE = 9600
 PORT = "/dev/ttyS0"
 
-HEX_STRING_UP = "a50002fdff"
-HEX_STRING_DOWN = "a50010efff"
-HEX_STRING_EMPTY = "a50000ffff"
+HEX_STRING_PROFILE1 = "a50002fdff"
+HEX_STRING_PROFILE4 = "a50010efff"
+HEX_STRING_DEFAULT = "a50000ffff"
+
+HEX_STRING_UP = "a50020dfff"
+HEX_STRING_DOWN = "a50040bfff"
 
 
 class SerialService:
@@ -27,14 +30,21 @@ class SerialService:
     # writes data to serial port
     def write_status(self, status):
         if status == "UP":
-            self.write_hex_string_to_serial(HEX_STRING_UP)
+            self.write_hex_string_to_serial(HEX_STRING_PROFILE1)
         elif status == "DOWN":
-            self.write_hex_string_to_serial(HEX_STRING_DOWN)
+            self.write_hex_string_to_serial(HEX_STRING_PROFILE4)
         else:
-            self.write_hex_string_to_serial(HEX_STRING_EMPTY)
+            self.write_hex_string_to_serial(HEX_STRING_DEFAULT)
 
     def write(self, data):
         self.ser.write(data)
 
     def close_connection(self):
         self.ser.close()
+
+    def activateDesk(self):
+        self.write_hex_string_to_serial(HEX_STRING_UP)
+        self.write_hex_string_to_serial(HEX_STRING_UP)
+        sleep(1)
+        self.write_hex_string_to_serial(HEX_STRING_DOWN)
+        self.write_hex_string_to_serial(HEX_STRING_DOWN)
