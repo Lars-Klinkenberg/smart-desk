@@ -8,8 +8,11 @@ class GpioService:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.PIN_RELAY, GPIO.OUT)
 
-    def set_rx_off(self):
+    def disable_write_to_serial(self):
         GPIO.output(self.PIN_RELAY, False)
 
-    def set_rx_on(self):
+    def enable_write_to_serial(self):
         GPIO.output(self.PIN_RELAY, True)
+
+    def close(self):
+        GPIO.cleanup()

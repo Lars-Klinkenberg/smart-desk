@@ -23,9 +23,8 @@ class Runntime:
     def move_desk(self, direction):
         print("Moving desk to position: " + direction)
 
-        self.gpio_service.set_rx_on()
+        self.gpio_service.enable_write_to_serial()
         i = 0
-
         # send direction signal
         while i != self.WRITING_ITERATIONS:
             i = i + 1
@@ -46,12 +45,13 @@ class Runntime:
                     started_height_adjustment = True
 
         print(f"Moved desk to height: {height}")
-        self.gpio_service.set_rx_off()
+        self.gpio_service.disable_write_to_serial()
 
     # closes all connections
     def stop(self):
         self.serial.close_connection()
-        self.gpio_service.set_rx_off()
+        self.gpio_service.disable_write_to_serial()
+        self.gpio_service.close()
 
     # check if height is equal to sitting or standing height
     def max_height_reached(self, height):
@@ -101,17 +101,17 @@ class Runntime:
         return all_heights
 
     def getCurrentHeight(self):
-        rt.gpio_service.set_rx_on()
+        rt.gpio_service.enable_write_to_serial()
 
         gotHeight = True
         while gotHeight:
             rt.serial.activateDesk()
             height = rt.getDeskHeight()
-            print("TEST ", height)
 
             if height:
                 gotHeight = False
 
+        rt.gpio_service.disable_write_to_serial()
         return height
 
 
