@@ -1,6 +1,6 @@
 from time import sleep
 
-from converterService import ConverterService
+from Services.converterService import ConverterService
 
 
 class DeskService:

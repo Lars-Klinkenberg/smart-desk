@@ -1,7 +1,7 @@
-from serialService import SerialService
-from converterService import ConverterService
-from gpioService import GpioService
-from deskService import DeskService
+from Services.serialService import SerialService
+from Services.converterService import ConverterService
+from Services.gpioService import GpioService
+from Services.deskService import DeskService
 
 
 class Runntime:
