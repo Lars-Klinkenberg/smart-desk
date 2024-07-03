@@ -96,14 +96,20 @@ class DeskService:
 
         return all_heights
 
+    # get the current height even if the desk is not active
+    # TODO:  make the function 100% reliable.
     def getCurrentHeight(self) -> int:
 
         gotHeight = True
         while gotHeight:
             self.serial.activateDesk()
-            height = self.getDeskHeight()
+            all_heights = self.getDeskHeight()
 
-            if height:
+            if all_heights:
                 gotHeight = False
 
+        if len(all_heights) <= 0:
+            return 0
+
+        height = round(sum(all_heights) / len(all_heights))
         return height
