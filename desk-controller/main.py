@@ -35,14 +35,15 @@ class Runntime:
         started_height_adjustment = False
 
         # write default while height is changing
-        while (not self.max_height_reached(height)) or not started_height_adjustment:
+        while (not self.max_height_reached(height)) and not started_height_adjustment:
             self.serial.write_status("DEFAULT")
 
-            # read current height data and iterate over chunks
-            for t in self.getDeskHeight():
-                # if height is fist time not equal to sitting and standing height
-                if (height != self.SITTING_HEIGHT) and (height != self.STANDING_HEIGHT):
-                    started_height_adjustment = True
+            all_heights = self.getDeskHeight()
+            height = round(sum(all_heights) / len(all_heights))
+
+            # if height is fist time not equal to sitting and standing height
+            if (height != self.SITTING_HEIGHT) and (height != self.STANDING_HEIGHT):
+                started_height_adjustment = True
 
         print(f"Moved desk to height: {height}")
         self.gpio_service.disable_write_to_serial()
