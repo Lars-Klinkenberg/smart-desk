@@ -3,7 +3,7 @@ from time import sleep
 from converterService import ConverterService
 
 
-class DeskController:
+class DeskService:
     # controller needs more than one short input to react
     # should work with about 15 iterations but sometimes it needs more to react.
     WRITING_ITERATIONS = 50

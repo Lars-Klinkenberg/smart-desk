@@ -1,7 +1,7 @@
 from serialService import SerialService
 from converterService import ConverterService
 from gpioService import GpioService
-from deskController import DeskController
+from deskService import DeskService
 
 
 class Runntime:
@@ -10,7 +10,7 @@ class Runntime:
         self.serial = SerialService()
         self.gpio_service = GpioService()
         self.converter = ConverterService()
-        self.desk = DeskController(self.serial)
+        self.desk = DeskService(self.serial)
 
     # closes all connections
     def stop(self):
