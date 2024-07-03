@@ -13,3 +13,9 @@ This is a personal project to control my standing desk using a Raspberry Pi 4. T
 
 # Setup information
 - Serial Ports on the Raspberry must be enabled
+
+## libs
+`pip instll pyserial`
+`pip install flask`
+`pip install flask-classful`
+`pip install rpi.gpio`
