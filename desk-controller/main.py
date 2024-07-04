@@ -5,9 +5,10 @@ from Services.deskService import DeskService
 from Controller.heightController import HeightController
 
 from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app) # This will enable CORS for all routes
 
 class Runntime:
 
@@ -33,6 +34,6 @@ if __name__ == "__main__":
     HeightController.register(
         app, route_base="/", init_argument=height_controller_arguments
     )
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
 
     rt.stop()
