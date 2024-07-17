@@ -14,10 +14,10 @@ HEX_STRING_DOWN = "a50040bfff"
 
 class SerialService:
     def __init__(self):
-        self.ser = serial.Serial(PORT, BAUD_RATE)
+        self.ser = serial.Serial(PORT, BAUD_RATE, serial.FIVEBITS)
 
     # reads data from serial port and returns it
-    def read(self):
+    def read(self, timeout = None):
         received_data = self.ser.read()  # read serial port
         sleep(0.03)
         data_left = self.ser.inWaiting()  # check for remaining byte

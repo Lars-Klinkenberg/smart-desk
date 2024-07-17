@@ -1,6 +1,7 @@
 from time import sleep
 
 from Services.converterService import ConverterService
+from Services.serialService import SerialService
 
 
 class DeskService:
@@ -12,7 +13,7 @@ class DeskService:
     STANDING_HEIGHT = 115
     SITTING_HEIGHT = 74
 
-    def __init__(self, serialService) -> None:
+    def __init__(self, serialService: SerialService) -> None:
         self.serial = serialService
         self.converter = ConverterService()
 
@@ -81,9 +82,9 @@ class DeskService:
         return "UNDEFINED"
 
     # returns a list of measured heights
-    def getDeskHeight(self):
+    def getDeskHeight(self, timeout=None):
         # read current height data and iterate over chunks
-        temp = self.converter.split_in_valid_chunks(self.serial.read())
+        temp = self.converter.split_in_valid_chunks(self.serial.read(timeout))
         all_heights = []
         for t in temp:
             height = self.converter.convert_hex_arr_to_number(t)
@@ -98,15 +99,8 @@ class DeskService:
 
     # get the current height even if the desk is not active
     # TODO:  make the function 100% reliable.
-    def getCurrentHeight(self) -> int:
-
-        gotHeight = True
-        while gotHeight:
-            self.serial.activateDesk()
-            all_heights = self.getDeskHeight()
-
-            if all_heights:
-                gotHeight = False
+    def getCurrentHeight(self, timeout=None) -> int:
+        all_heights = self.getDeskHeight(timeout)
 
         if len(all_heights) <= 0:
             return 0
