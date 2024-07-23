@@ -14,6 +14,10 @@ shutdown_event = Event()
 
 
 def get_current_height_loop():
+    """
+    Background thread to update the desk height
+    """
+
     while not shutdown_event.is_set():
         time.sleep(10)  # Change height every 10 seconds
         with app.app_context():  # Access the api context
@@ -27,17 +31,29 @@ def get_current_height_loop():
 
 
 def change_desk_height_loop():
+    """
+    Background thread to change the desk height
+    """
+
     while not shutdown_event.is_set():
         with app.app_context():
             pass
 
 
 def signal_handler(sig, frame):
+    """
+    Signal handler for graceful shutdown
+    """
+
     shutdown_event.set()  # Signal the background thread to stop
     sys.exit(0)
 
 
 def exit():
+    """
+    Clean up and exit the application
+    """
+
     print("-- Exited successfully --")
     pass
 

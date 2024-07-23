@@ -3,41 +3,24 @@ from controllers.desk_hardware_controller import DeskHardwareController
 
 desk_hardware_controller = DeskHardwareController()
 
+
 class DeskController:
-    STANDING_HEIGHT = 115
-    SITTING_HEIGHT = 74
+    """
+    Controller class for the desk
+    """
 
-    def move_up(self, increment):
+    def move(self, direction):
+        """
+        Moves the desk to the given direction
+
+        Args:
+            direction (string): "UP" or "DOWN"
+        """
+
         if desk_state.is_moving:
             return {"error": "Desk is already moving"}
 
-        desk_state.start_moving()
-        # Simulate the time taken to move the desk (this should be handled by actual hardware logic)
-        new_height = desk_state.get_height() + increment
-        self._move_physical_desk(new_height)
-        desk_state.set_height(new_height)
-        desk_state.stop_moving()
-        return {"height": new_height}
-
-    def move_down(self, decrement):
-        if desk_state.is_moving:
-            return {"error": "Desk is already moving"}
-
-        desk_state.start_moving()
-
-        # Simulate the time taken to move the desk (this should be handled by actual hardware logic)
-        new_height = desk_state.get_height() - decrement
-        
-        
-        
-        desk_hardware_controller.move()
-
-
-
-        
-        desk_state.set_height(new_height)
-        desk_state.stop_moving()
-        return {"height": new_height}
+        return desk_hardware_controller.move(direction)
 
     def get_current_height(self):
         return {"height": desk_state.get_height()}
