@@ -1,72 +1,60 @@
-from time import sleep
+import signal
+import sys
 from flask import Flask
-from flask_cors import CORS
-from multiprocessing import Process, Value
-
-from Services.serialService import SerialService
-from Services.converterService import ConverterService
-from Services.gpioService import GpioService
-from Services.deskService import DeskService
-from Controller.restController import RestController
-from States.heightState import HeightState
-
+from threading import Thread, Event
+import time
+from routes.desk_routes import desk_bp
+from utils.desk_state import desk_state
 
 app = Flask(__name__)
-CORS(app)  # This will enable CORS for all routes
+app.register_blueprint(desk_bp, url_prefix="/api")
+
+# Create a shutdown event to signal the background thread to stop
+shutdown_event = Event()
 
 
-class Runntime:
+def get_current_height_loop():
+    while not shutdown_event.is_set():
+        time.sleep(10)  # Change height every 10 seconds
+        with app.app_context():  # Access the api context
+            if not desk_state.is_moving:
+                current_height = desk_state.get_height()
+                new_height = (
+                    current_height + 5 if current_height < 100 else 0
+                )  # Example logic
+                desk_state.set_height(new_height)
+                print(f"Background thread updated height to {new_height}")
 
-    def __init__(self):
-        self.serial = SerialService()
-        self.gpio_service = GpioService()
-        self.converter = ConverterService()
-        self.desk = DeskService(self.serial)
-        self.heightState = HeightState(self.desk)
 
-    # closes all connections
-    def stop(self):
-        self.serial.close_connection()
-        self.gpio_service.disable_write_to_serial()
-        self.gpio_service.close()
+def change_desk_height_loop():
+    while not shutdown_event.is_set():
+        with app.app_context():
+            pass
 
-    def start(self):
-        threads = []
 
-        p = Process(target=self.loop)
-        p.start()
+def signal_handler(sig, frame):
+    shutdown_event.set()  # Signal the background thread to stop
+    sys.exit(0)
 
-        threads.append(p)
-        self.initRestController()
 
-        for t in threads:
-            t.join()
-
-        return threads
-
-    def loop(self):
-        while True:
-            # check for height changes
-            rt.heightState.readHeight()
-
-    def initRestController(self):
-        height_controller_arguments = {
-            "gpio_service": rt.gpio_service,
-            "desk": rt.desk,
-        }
-
-        RestController.register(
-            app, route_base="/", init_argument=height_controller_arguments
-        )
-        app.run(debug=True, host="0.0.0.0", use_reloader=False)
+def exit():
+    print("-- Exited successfully --")
+    pass
 
 
 if __name__ == "__main__":
-    rt = Runntime()
+    # Register signal handler for graceful shutdown
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
 
+    # Start the background thread
+    thread = Thread(target=get_current_height_loop)
+    thread.start()
+
+    # Run the Flask app
     try:
-        rt.start()
-    except (KeyboardInterrupt, SystemExit):
-        print("Received keyboard interrupt, quitting threads.")
+        app.run(debug=True)
     finally:
-        rt.stop()
+        shutdown_event.set()  # Signal the background thread to stop
+        thread.join()  # Wait for the background thread to finish
+        exit()

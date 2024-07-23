@@ -1,7 +1,7 @@
 from time import sleep
 
-from Services.converterService import ConverterService
-from Services.serialService import SerialService
+from utils.converter_service import ConverterService
+from utils.serial_service import SerialService
 
 
 class DeskService:
