@@ -25,15 +25,21 @@ class DeskController:
         if desk_state.is_moving:
             return {"error": "Desk is already moving"}
 
+        desk_state.start_moving()
+
         for i in range(iterations):
             sleep(0.02)
             desk_hardware_controller.move(direction)
 
-    def write_default_till_max_reached(self, height, direction):
+        self.write_default_till_max_reached(direction)
+
+        desk_state.stop_moving()
+
+    def write_default_till_max_reached(self, direction):
         if not desk_state.is_moving:
             return
 
-        while not self.is_max_height_reached(height, direction):
+        while not self.is_max_height_reached(desk_state.get_height(), direction):
             desk_hardware_controller.move("DEFAUKLT")
 
     def is_max_height_reached(self, height, direction=None) -> bool:
@@ -103,3 +109,10 @@ class DeskController:
 
         height = round(sum(all_heights) / len(all_heights))
         return height
+
+    def handle_moving_request(self, direction):
+        if (direction != "UP") and (direction != "DOWN"):
+            return False
+        
+        desk_state.set_moving_direction(direction)
+        return True

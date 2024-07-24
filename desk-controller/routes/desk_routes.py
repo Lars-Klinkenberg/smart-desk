@@ -20,13 +20,14 @@ def get_height():
     return jsonify(result)
 
 
-@desk_bp.route("/desk/move", methods=["POST"])
+@desk_bp.route("/desk/move", methods=["GET"])
 def move_up():
     """
-    Moves the desk to the given direction
+    Moves the desk to the given direction. Path == ?direction=
     """
+    direction = request.args.get("direction")
 
-    data = request.get_json()
-    increment = data.get("increment", 1)  # Default increment to 1 if not provided
-    result = desk_controller.move_up(increment)
-    return jsonify(result)
+    if desk_controller.handle_moving_request(direction):
+        return jsonify({"success": "moving desk to direction"})
+
+    return jsonify({"error": "no valid direction given"})
