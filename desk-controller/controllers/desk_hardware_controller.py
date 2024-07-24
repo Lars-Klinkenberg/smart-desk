@@ -24,4 +24,4 @@ class DeskHardwareController:
 
         pass
 
-    
+desk_hardware_controller = DeskHardwareController()

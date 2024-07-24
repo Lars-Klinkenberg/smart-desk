@@ -86,3 +86,5 @@ class ConverterService:
             return SEGMENT_DICT[segment]
         except:
             return -1
+
+converter_service = ConverterService()

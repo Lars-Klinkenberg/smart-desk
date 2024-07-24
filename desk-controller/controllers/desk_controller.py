@@ -1,8 +1,7 @@
 from time import sleep
 from utils.desk_state import desk_state
-from controllers.desk_hardware_controller import DeskHardwareController
-
-desk_hardware_controller = DeskHardwareController()
+from controllers.desk_hardware_controller import desk_hardware_controller
+from utils.converter_service import converter_service
 
 
 class DeskController:
@@ -83,36 +82,27 @@ class DeskController:
 
         return "UNDEFINED"
 
-    # returns a list of measured heights
+    # returns measured height
     def getDeskHeight(self, timeout=None):
         # read current height data and iterate over chunks
-        temp = self.converter.split_in_valid_chunks(self.serial.read(timeout))
+        height_temp = self.serial.read(timeout)
+        height_splitted = converter_service.split_in_valid_chunks(height_temp)
         all_heights = []
-        for t in temp:
+
+        for t in height_splitted:
             height = self.converter.convert_hex_arr_to_number(t)
 
             # only count valid heights
             if height <= 0:
                 continue
 
-            all_heights.append(self.converter.convert_hex_arr_to_number(t))
+            all_heights.append(converter_service.convert_hex_arr_to_number(t))
 
-        return all_heights
-
-    # get the current height even if the desk is not active
-    # TODO:  make the function 100% reliable.
-    def getCurrentHeight(self, timeout=None) -> int:
-        all_heights = self.getDeskHeight(timeout)
-
-        if len(all_heights) <= 0:
-            return 0
-
-        height = round(sum(all_heights) / len(all_heights))
-        return height
+        return round(all_heights.sum() / len(all_heights))
 
     def handle_moving_request(self, direction):
         if (direction != "UP") and (direction != "DOWN"):
             return False
-        
+
         desk_state.set_moving_direction(direction)
         return True
