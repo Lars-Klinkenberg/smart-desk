@@ -5,12 +5,26 @@ from threading import Thread, Event
 import time
 from routes.desk_routes import desk_bp
 from utils.desk_state import desk_state
+from utils.gpio_service import gpio_service
 
 app = Flask(__name__)
 app.register_blueprint(desk_bp, url_prefix="/api")
 
 # Create a shutdown event to signal the background thread to stop
 shutdown_event = Event()
+
+
+def setup():
+    pass
+
+
+def exit():
+    """
+    Clean up and exit the application
+    """
+    gpio_service.close()
+    print("Exited successfully")
+    pass
 
 
 def get_current_height_loop():
@@ -44,18 +58,9 @@ def signal_handler(sig, frame):
     """
     Signal handler for graceful shutdown
     """
-
+    print("Exiting ....")
     shutdown_event.set()  # Signal the background thread to stop
     sys.exit(0)
-
-
-def exit():
-    """
-    Clean up and exit the application
-    """
-
-    print("-- Exited successfully --")
-    pass
 
 
 if __name__ == "__main__":

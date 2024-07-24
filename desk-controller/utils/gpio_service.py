@@ -16,3 +16,6 @@ class GpioService:
 
     def close(self):
         GPIO.cleanup()
+
+# Create a global instance of the gpio service
+gpio_service = GpioService()
