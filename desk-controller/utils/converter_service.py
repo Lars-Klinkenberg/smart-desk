@@ -1,12 +1,30 @@
 class ConverterService:
     MAX_HEIGHT = 130
 
-    # converts serial string to hex value array
     def serial_to_hex(self, data):
+        """
+        converts serial string to hex value array
+
+        Args:
+            data : serial string
+
+        Returns:
+            hex value array
+        """
+
         return data.hex("-").split("-")
 
-    # splits serial Data into a list of valid hex chunks
     def split_in_valid_chunks(self, serial_data):
+        """
+        splits serial Data into a lsit of valid hex chunks. Each chunk starts with "5a"
+
+        Args:
+            serial_data : serial data
+
+        Returns:
+            array of hex value arrays
+        """
+
         splitted_data = self.serial_to_hex(serial_data)
         chunked_data = []
         temp_arr = []
@@ -29,7 +47,17 @@ class ConverterService:
         return chunked_data
 
     #
-    def convert_hex_arr_to_number(self, hex_arr):
+    def convert_hex_arr_to_height(self, hex_arr):
+        """
+        turns a list of hex values into the corresponding height.
+
+        Args:
+            hex_arr (arr of hex values): array should have a length of 5.
+
+        Returns:
+            float: calculated height
+        """
+
         if len(hex_arr) < 5:
             return -1
 
@@ -57,9 +85,19 @@ class ConverterService:
 
         return got_height
 
-    # turns an hex value into a number (0-9)
     def hex_to_number(self, segment):
-        # 8 bit to 7 Segment so first bit can be 0 or 1
+        """
+        turns an 7-Segment hex value into a number (0-9)
+
+        Args:
+            segment (hex): a valid hex value
+
+        Returns:
+            int: 0-9 or -1 if no matching value was found
+        """
+        # map of 8 bit values as hex
+        # because the 7-Segment only needs 7 bits the 1 bit can be 1 or 0 and still be the same number
+        # therefore both options are listed
         SEGMENT_DICT = {
             "3f": 0,
             "bf": 0,
@@ -86,5 +124,6 @@ class ConverterService:
             return SEGMENT_DICT[segment]
         except:
             return -1
+
 
 converter_service = ConverterService()

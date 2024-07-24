@@ -2,6 +2,7 @@ from time import sleep
 from utils.desk_state import desk_state
 from controllers.desk_hardware_controller import desk_hardware_controller
 from utils.converter_service import converter_service
+from utils.serial_service import serial_service
 
 
 class DeskController:
@@ -63,7 +64,7 @@ class DeskController:
     def get_current_height(self):
         return {"height": desk_state.get_height()}
 
-    def deskStatus(self, height) -> str:
+    def desk_status(self, height) -> str:
         """
         returns the current status of the desk
 
@@ -83,20 +84,20 @@ class DeskController:
         return "UNDEFINED"
 
     # returns measured height
-    def getDeskHeight(self, timeout=None):
+    def measure_desk_height(self, timeout=None):
         # read current height data and iterate over chunks
-        height_temp = self.serial.read(timeout)
+        height_temp = serial_service.read(timeout)
         height_splitted = converter_service.split_in_valid_chunks(height_temp)
         all_heights = []
 
         for t in height_splitted:
-            height = self.converter.convert_hex_arr_to_number(t)
+            height = converter_service.convert_hex_arr_to_height(t)
 
             # only count valid heights
             if height <= 0:
                 continue
 
-            all_heights.append(converter_service.convert_hex_arr_to_number(t))
+            all_heights.append(converter_service.convert_hex_arr_to_height(t))
 
         return round(all_heights.sum() / len(all_heights))
 
