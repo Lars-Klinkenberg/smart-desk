@@ -6,6 +6,7 @@ import time
 from routes.desk_routes import desk_bp
 from utils.desk_state import desk_state
 from utils.gpio_service import gpio_service
+from controllers.desk_controller import desk_controller
 
 app = Flask(__name__)
 app.register_blueprint(desk_bp, url_prefix="/api")
@@ -33,15 +34,10 @@ def get_current_height_loop():
     """
 
     while not shutdown_event.is_set():
-        time.sleep(10)  # Change height every 10 seconds
+        time.sleep(1)  # Change height every 10 seconds
         with app.app_context():  # Access the api context
-            if not desk_state.is_moving:
-                current_height = desk_state.get_height()
-                new_height = (
-                    current_height + 5 if current_height < 100 else 0
-                )  # Example logic
-                desk_state.set_height(new_height)
-                print(f"Background thread updated height to {new_height}")
+            desk_controller.measure_desk_height(1)
+            print("Height ", desk_state.get_height())
 
 
 def change_desk_height_loop():
@@ -51,7 +47,10 @@ def change_desk_height_loop():
 
     while not shutdown_event.is_set():
         with app.app_context():
-            pass
+            time.sleep(5)
+            if desk_state.should_desk_be_moved():
+                print("moving desk ...")
+                desk_controller.move(desk_state.get_moving_direction())
 
 
 def signal_handler(sig, frame):
@@ -69,13 +68,17 @@ if __name__ == "__main__":
     signal.signal(signal.SIGTERM, signal_handler)
 
     # Start the background thread
-    thread = Thread(target=get_current_height_loop)
-    thread.start()
+    height_thread = Thread(target=get_current_height_loop)
+    height_thread.start()
+
+    change_thread = Thread(target=change_desk_height_loop)
+    change_thread.start()
 
     # Run the Flask app
     try:
         app.run(debug=True)
     finally:
         shutdown_event.set()  # Signal the background thread to stop
-        thread.join()  # Wait for the background thread to finish
+        height_thread.join()  # Wait for the background thread to finish
+        change_thread.join()
         exit()

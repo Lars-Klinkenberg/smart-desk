@@ -1,4 +1,5 @@
 from utils.desk_state import desk_state
+from utils.serial_service import serial_service
 
 
 class DeskHardwareController:
@@ -16,12 +17,11 @@ class DeskHardwareController:
         Returns:
         bool: True if everything is valid
         """
+        if (position != "UP") and (position != "DOWN") and (position != "DEFAULT"):
+            return False
 
-        if position == "UP":
-            pass
-        elif position == "DOWN":
-            pass
+        serial_service.write_status(position)
+        return True
 
-        pass
 
 desk_hardware_controller = DeskHardwareController()

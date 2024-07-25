@@ -21,3 +21,6 @@ class HeightChanger:
 
         desk_state.set_height(height)
         return {"height": desk_state.get_height()}
+
+
+height_changer = HeightChanger()

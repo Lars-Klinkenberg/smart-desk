@@ -19,6 +19,7 @@ class DeskState:
         self.height = height
 
     def start_moving(self):
+        self.reset_moving_direction()
         self.is_moving = True
 
     def stop_moving(self):
@@ -30,18 +31,23 @@ class DeskState:
 
     def should_desk_be_moved(self):
         return (self.moveDeskTo == "UP") or (self.moveDeskTo == "DOWN")
-    
+
     def get_moving_direction(self):
         return self.moveDeskTo
 
     def set_moving_direction(self, direction):
-        if (direction != "UP") or (direction != "DOWN"):
-            return
-
         self.moveDeskTo = direction
-        
+
     def reset_moving_direction(self):
         self.moveDeskTo = "DEFAULT"
+
+    def handle_moving_request(self, direction):
+        if (direction != "UP") and (direction != "DOWN"):
+            return False
+
+        self.set_moving_direction(direction)
+        return True
+
 
 # Create a global instance of the desk state
 desk_state = DeskState()

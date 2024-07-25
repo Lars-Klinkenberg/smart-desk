@@ -26,6 +26,7 @@ class SerialService:
         Returns:
             bytes: serial as bytes
         """
+        self.ser.timeout = timeout
         received_data = self.ser.read()  # read serial port
         sleep(0.03)
         data_left = self.ser.inWaiting()  # check for remaining byte
@@ -60,6 +61,7 @@ class SerialService:
         Args:
             data (bytes): data
         """
+
         self.ser.write(data)
 
     def close_connection(self):
