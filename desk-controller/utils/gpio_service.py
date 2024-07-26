@@ -7,7 +7,6 @@ class GpioService:
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.PIN_RELAY, GPIO.OUT)
-        GPIO.setup(self.PIN_TEST, GPIO.OUT)
 
     def disable_write_to_serial(self):
         GPIO.output(self.PIN_RELAY, False)
