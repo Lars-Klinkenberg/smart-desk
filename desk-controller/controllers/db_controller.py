@@ -5,11 +5,11 @@ import sys
 # Connect to MariaDB Platform
 try:
     conn = mariadb.connect(
-        user="deskController",
-        password="pw1234",
-        host="localhost",
-        port=3306,
-        database="standing_desk"
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT")),
+        database=os.getenv("DB_NAME")
 
     )
 except mariadb.Error as e:
