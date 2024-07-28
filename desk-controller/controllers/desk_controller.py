@@ -11,50 +11,6 @@ class DeskController:
     Controller class for the desk
     """
 
-    STANDING_HEIGHT = 115
-    SITTING_HEIGHT = 74
-
-    def send_move_signal(self, direction, iterations=50):
-        """
-        Moves the desk to the given direction
-
-        Args:
-            direction (string): "UP" or "DOWN"
-            iterations (int): number of times direction should be written to serial
-        """
-
-        for i in range(iterations):
-            sleep(0.02)
-            desk_hardware_controller.move(direction)
-
-    def write_default_till_max_reached(self, direction):
-        if not desk_state.is_moving:
-            return
-
-        while not self.is_max_height_reached(desk_state.get_height(), direction):
-            print("Write default")
-            desk_hardware_controller.move("DEFAULT")
-            sleep(0.02)
-
-    def is_max_height_reached(self, height, direction=None) -> bool:
-        """
-        checks if the height equals the defined standing or sitting height
-
-        Args:
-            height (int): the height that should be checked
-            direction (string): "UP" or "DOWN" if given check also if right height is reached
-
-        Returns:
-            bool: True if height matches STANDING_HEIGHT or SITTING_HEIGHT
-        """
-
-        if (height == self.STANDING_HEIGHT) and (direction == "UP"):
-            return True
-        if (height == self.SITTING_HEIGHT) and (direction == "DOWN"):
-            return True
-
-        return False
-
     def desk_status(self, height) -> str:
         """
         returns the current status of the desk
@@ -66,10 +22,10 @@ class DeskController:
         if height <= 0:
             return "UNDEFINED"
 
-        if height == self.SITTING_HEIGHT:
+        if height == desk_hardware_controller.SITTING_HEIGHT:
             return "DOWN"
 
-        if height == self.STANDING_HEIGHT:
+        if height == desk_hardware_controller.STANDING_HEIGHT:
             return "UP"
 
         return "UNDEFINED"
@@ -101,8 +57,8 @@ class DeskController:
         print("MOVING TO:", direction)
         gpio_service.enable_write_to_serial()
         desk_state.start_moving()
-        self.send_move_signal(direction, 150)
-        self.write_default_till_max_reached(direction)
+        desk_hardware_controller.send_move_signal(direction)
+        desk_hardware_controller.write_default_till_max_reached(direction)
         gpio_service.disable_write_to_serial()
         desk_state.stop_moving()
 

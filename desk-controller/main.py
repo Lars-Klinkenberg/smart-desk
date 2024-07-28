@@ -33,6 +33,7 @@ def get_current_height_loop():
     Background thread to update the desk height
     """
 
+    print("Started current height loop")
     while not shutdown_event.is_set():
         time.sleep(1)  # Change height every 10 seconds
         with app.app_context():  # Access the api context
@@ -44,7 +45,7 @@ def change_desk_height_loop():
     """
     Background thread to change the desk height
     """
-
+    print("Started change height loop")
     while not shutdown_event.is_set():
         with app.app_context():
             time.sleep(5)
