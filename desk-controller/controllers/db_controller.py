@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 class DatabaseController:
     INSERT_HEIGHT_QUERRY = "INSERT INTO desk (height) VALUES ({});"
-    GET_ALL_HEIGHTS_QUERRY = ""
+    GET_ALL_HEIGHTS_QUERRY = "SELECT height FROM desk;"
     GET_TODAYS_TOTAL_TIME_QUERRY = ""
     GET_AVG_TOTAL_TIME_QUERRY = ""
 
@@ -36,13 +36,31 @@ class DatabaseController:
         self.conn.close()
 
     def save_height(self, height):
-        self.connect()
-        cursor = self.conn.cursor()
-        cursor.execute(self.INSERT_HEIGHT_QUERRY.format(height))
-        self.conn.commit()
-        self.close()
+        try:
+            self.connect()
+            cursor = self.conn.cursor()
+            cursor.execute(self.INSERT_HEIGHT_QUERRY.format(height))
+            self.conn.commit()
+            return {"success": "Successfully saved height"}
+        except Exception as e:
+            return {"error": f"{e}"}
+        finally:
+            self.close()
 
-        return
+    def get_all_heights(self):
+        try:
+            self.connect()
+            cursor = self.conn.cursor()
+            cursor.execute(self.GET_ALL_HEIGHTS_QUERRY)
+            rows = cursor.fetchall()
+
+            # get nested list like [[1], [2] , ...] to flat list
+            flat_list = [item for sublist in rows for item in sublist]
+            return {"success": flat_list}
+        except Exception as e:
+            return {"error": f"{e}"}
+        finally:
+            self.close()
 
 
 db_controller = DatabaseController()
