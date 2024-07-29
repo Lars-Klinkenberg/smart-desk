@@ -15,10 +15,6 @@ app.register_blueprint(desk_bp, url_prefix="/api")
 shutdown_event = Event()
 
 
-def setup():
-    pass
-
-
 def exit():
     """
     Clean up and exit the application
@@ -35,10 +31,13 @@ def get_current_height_loop():
 
     print("Started current height loop")
     while not shutdown_event.is_set():
-        time.sleep(1)  # Change height every 10 seconds
-        with app.app_context():  # Access the api context
-            desk_controller.measure_desk_height(1)
-            print("Height ", desk_state.get_height())
+        try:
+            time.sleep(1)  # Change height every 10 seconds
+            with app.app_context():  # Access the api context
+                desk_controller.measure_desk_height(1)
+                print("Height ", desk_state.get_height())
+        except Exception as e:  
+            print(f"Error in get_current_height_loop: {e}")
 
 
 def change_desk_height_loop():
@@ -47,11 +46,14 @@ def change_desk_height_loop():
     """
     print("Started change height loop")
     while not shutdown_event.is_set():
-        with app.app_context():
-            time.sleep(5)
-            if desk_state.should_desk_be_moved():
-                print("moving desk ...")
-                desk_controller.move(desk_state.get_moving_direction())
+        try:
+            with app.app_context():
+                time.sleep(5)
+                if desk_state.should_desk_be_moved():
+                    print("moving desk ...")
+                    desk_controller.move(desk_state.get_moving_direction())
+        except Exception as e:
+            print(f"Error in change_desk_height_loop: {e}")
 
 
 def signal_handler(sig, frame):

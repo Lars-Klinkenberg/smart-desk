@@ -1,6 +1,7 @@
 # Module Imports
+import logging
+import os
 import mariadb
-import sys
 
 # Connect to MariaDB Platform
 try:

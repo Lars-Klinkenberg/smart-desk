@@ -13,9 +13,10 @@ class DeskState:
 
     def set_height(self, height):
         # save last measurements
-        if self.height != 0:
-            self.latest_measurements.append(self.height)
+        if self.height <= 0:
+            return
 
+        self.latest_measurements.append(self.height)
         self.height = height
 
     def start_moving(self):

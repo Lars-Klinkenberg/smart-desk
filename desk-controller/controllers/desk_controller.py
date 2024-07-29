@@ -1,4 +1,3 @@
-from time import sleep
 from utils.desk_state import desk_state
 from controllers.desk_hardware_controller import desk_hardware_controller
 from utils.converter_service import converter_service

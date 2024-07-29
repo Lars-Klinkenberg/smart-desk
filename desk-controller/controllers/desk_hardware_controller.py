@@ -22,9 +22,8 @@ class DeskHardwareController:
         bool: True if everything is valid
         """
 
-        print("MOVE ", position)
-        # if (position != "UP") and (position != "DOWN") and (position != "DEFAULT"):
-        #     return False
+        if (position != "UP") and (position != "DOWN") and (position != "DEFAULT"):
+            return False
 
         serial_service.write_status(position)
         return True
@@ -38,7 +37,7 @@ class DeskHardwareController:
             iterations (int): number of times direction should be written to serial
         """
 
-        for i in range(iterations):
+        for _ in range(iterations):
             sleep(0.01)
             self.move(direction)
 
