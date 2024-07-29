@@ -15,4 +15,9 @@ class GpioService:
         GPIO.output(self.PIN_RELAY, True)
 
     def close(self):
+        self.disable_write_to_serial()
         GPIO.cleanup()
+
+
+# Create a global instance of the gpio service
+gpio_service = GpioService()
