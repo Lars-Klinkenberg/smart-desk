@@ -15,7 +15,7 @@ try:
     )
 except mariadb.Error as e:
     logging.error(f"Error connecting to MariaDB Platform: {e}")
-    raise SystemExit(e)
+    raise SystemExit(e) from e
 
 # Get Cursor
 cur = conn.cursor()
