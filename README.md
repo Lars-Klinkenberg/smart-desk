@@ -19,3 +19,4 @@ This is a personal project to control my standing desk using a Raspberry Pi 4. T
 `pip install flask`
 `pip install flask-classful`
 `pip install rpi.gpio`
+`pip install python-dotenv`
