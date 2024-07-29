@@ -80,6 +80,8 @@ if __name__ == "__main__":
     # Run the Flask app
     try:
         app.run(debug=True)
+    except Exception as e:
+        print(f"Error in main block: {e}") 
     finally:
         shutdown_event.set()  # Signal the background thread to stop
         height_thread.join()  # Wait for the background thread to finish
