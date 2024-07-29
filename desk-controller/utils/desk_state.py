@@ -4,6 +4,7 @@
 class DeskState:
     def __init__(self):
         self.height = 0  # Initial height of the desk
+        self.last_final_height = 0
         self.is_moving = False
         self.latest_measurements = []  # a list of the latest measurements
         self.moveDeskTo = "DEFAULT"
@@ -13,11 +14,19 @@ class DeskState:
 
     def set_height(self, height):
         # save last measurements
-        if self.height <= 0:
+        if height <= 0:
             return
 
-        self.latest_measurements.append(self.height)
+        # TODO : replace with get current height
+        # after init last height is 0
+        if self.last_final_height == 0:
+            self.last_final_height = height
+
         self.height = height
+        self.latest_measurements.append(height)
+
+        if len(self.latest_measurements) > 10:
+            self.latest_measurements.pop(0)
 
     def start_moving(self):
         self.reset_moving_direction()
@@ -48,6 +57,16 @@ class DeskState:
 
         self.set_moving_direction(direction)
         return True
+
+    def get_latest_measurements(self):
+        return self.latest_measurements
+
+    def clear_latest_measurements(self):
+        self.last_final_height = self.latest_measurements.pop()
+        self.latest_measurements = []
+
+    def get_last_final_height(self):
+        return self.last_final_height
 
 
 # Create a global instance of the desk state

@@ -6,6 +6,7 @@ import time
 from routes.desk_routes import desk_bp
 from utils.desk_state import desk_state
 from utils.gpio_service import gpio_service
+from controllers.db_controller import db_controller
 from controllers.desk_controller import desk_controller
 
 app = Flask(__name__)
@@ -30,12 +31,16 @@ def get_current_height_loop():
     """
 
     print("Started current height loop")
+    print("To get the latest state of the Desk please press the move up/down button")
     while not shutdown_event.is_set():
         try:
             time.sleep(1)  # Change height every 10 seconds
             with app.app_context():  # Access the api context
-                desk_controller.measure_desk_height(1)
-                print("Height ", desk_state.get_height())
+                desk_controller.measure_desk_height()
+
+                if desk_controller.height_has_changed():
+                    db_controller.save_height(desk_state.get_height())
+                    desk_controller.reset_height_has_changed()
         except Exception as e:  
             print(f"Error in get_current_height_loop: {e}")
 
