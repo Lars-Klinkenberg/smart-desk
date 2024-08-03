@@ -62,7 +62,10 @@ class DeskState:
         return self.latest_measurements
 
     def clear_latest_measurements(self):
-        self.last_final_height = self.latest_measurements.pop()
+        if self.latest_measurements:
+            self.last_final_height = self.latest_measurements.pop()
+        else:
+            self.last_final_height = self.height
         self.latest_measurements = []
 
     def get_last_final_height(self):
