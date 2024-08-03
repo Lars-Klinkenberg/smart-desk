@@ -62,18 +62,12 @@ class DeskController:
         desk_state.stop_moving()
 
     def height_has_changed(self):
-        measurements = copy.deepcopy(desk_state.get_latest_measurements())
-        if(len(measurements) <= 1):
+        measurements = desk_state.get_latest_measurements()
+        if(len(measurements) <= 5):
             return False
 
-        latest_measurement = measurements.pop()
-        avg = (sum(measurements)/ len(measurements))
-        
-        if desk_state.get_last_final_height() == avg:
-            return False
-        
-
-        return avg == latest_measurement
+        # check if every item in the list is equal
+        return all(x == measurements[0] for x in measurements)
 
     def reset_height_has_changed(self):
         desk_state.clear_latest_measurements()
