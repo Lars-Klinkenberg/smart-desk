@@ -41,9 +41,8 @@ class DatabaseController:
             cursor = self.conn.cursor()
             cursor.execute(self.INSERT_HEIGHT_QUERRY.format(height))
             self.conn.commit()
-            return {"success": "Successfully saved height"}
         except Exception as e:
-            return {"error": f"{e}"}
+           raise Exception(e)
         finally:
             self.close()
 

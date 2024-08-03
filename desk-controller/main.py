@@ -39,6 +39,7 @@ def get_current_height_loop():
             if desk_controller.height_has_changed():
                 db_controller.save_height(desk_state.get_height())
                 desk_controller.reset_height_has_changed()
+                print("height has ben changed ...")
         except Exception as e:  
             print(f"Error in get_current_height_loop: {e}")
 
