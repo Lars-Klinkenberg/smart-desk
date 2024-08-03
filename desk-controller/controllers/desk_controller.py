@@ -3,7 +3,7 @@ from controllers.desk_hardware_controller import desk_hardware_controller
 from utils.converter_service import converter_service
 from utils.serial_service import serial_service
 from utils.gpio_service import gpio_service
-
+import copy
 
 class DeskController:
     """
@@ -61,5 +61,15 @@ class DeskController:
         gpio_service.disable_write_to_serial()
         desk_state.stop_moving()
 
+    def height_has_changed(self):
+        measurements = desk_state.get_latest_measurements()
+        if(len(measurements) <= 5):
+            return False
+
+        # check if every item in the list is equal
+        return all(x == measurements[0] for x in measurements)
+
+    def reset_height_has_changed(self):
+        desk_state.clear_latest_measurements()
 
 desk_controller = DeskController()
