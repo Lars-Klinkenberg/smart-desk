@@ -17,7 +17,7 @@ class DatabaseController:
         self.port = int(os.getenv("DB_PORT", 3306))
         self.database = os.getenv("DB_NAME")
 
-        if not self.user:
+        if not self.user or not self.password or not self.host or not self.database:
             raise ValueError("Database configuration not found")
 
     def connect(self):
