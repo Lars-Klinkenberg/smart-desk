@@ -3,7 +3,6 @@ from controllers.desk_hardware_controller import desk_hardware_controller
 from utils.converter_service import converter_service
 from utils.serial_service import serial_service
 from utils.gpio_service import gpio_service
-import copy
 
 class DeskController:
     """
@@ -66,6 +65,9 @@ class DeskController:
         if(len(measurements) <= 5):
             return False
 
+        if desk_state.get_last_final_height() == measurements[len(measurements) -1]:
+            return False
+        
         # check if every item in the list is equal
         return all(x == measurements[0] for x in measurements)
 
