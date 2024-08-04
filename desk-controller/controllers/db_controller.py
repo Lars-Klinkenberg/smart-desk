@@ -2,12 +2,14 @@ import os
 import mariadb
 from dotenv import load_dotenv
 
-
 class DatabaseController:
     INSERT_HEIGHT_QUERRY = "INSERT INTO desk (height) VALUES ({});"
-    GET_ALL_HEIGHTS_QUERRY = "SELECT height FROM desk;"
-    GET_TODAYS_TOTAL_TIME_QUERRY = ""
-    GET_AVG_TOTAL_TIME_QUERRY = ""
+    GET_ALL_ENTRYS_QUERRY = "SELECT height, time FROM desk;"
+    GET_ALL_ENTRYS_OF_DAY_QUERRY = "SELECT height, time FROM desk WHERE DATE(time) = '{}';"
+    GET_TODAYS_TOTAL_TIME_QUERRY = "SELECT height, SUM(duration_seconds) AS total_duration_seconds FROM ( SELECT height, TIMESTAMPDIFF(SECOND, time, LEAD(time) OVER (ORDER BY time)) AS duration_seconds FROM desk WHERE DATE(time) = CURDATE()) AS durations GROUP BY height;"
+    GET_AVG_TOTAL_TIME_QUERRY = "SELECT height, AVG(total_duration_seconds) AS avg_daily_duration_seconds FROM (SELECT height, date, SUM(duration_seconds) AS total_duration_seconds FROM (SELECT height, DATE(time) AS date, TIMESTAMPDIFF(SECOND, time, COALESCE(LEAD(time) OVER (PARTITION BY DATE(time) ORDER BY time), DATE_ADD(DATE(time), INTERVAL 1 DAY))) AS duration_seconds FROM desk) AS daily_durations GROUP BY height, date) AS daily_totals GROUP BY height;"
+    GET_SPECIFIC_AVG_TOTAL_TIME_QUERRY = "SELECT AVG(total_duration_seconds) AS avg_daily_duration_seconds FROM (SELECT height, date, SUM(duration_seconds) AS total_duration_seconds FROM (SELECT height, DATE(time) AS date, TIMESTAMPDIFF(SECOND, time, COALESCE(LEAD(time) OVER (PARTITION BY DATE(time) ORDER BY time), DATE_ADD(DATE(time), INTERVAL 1 DAY))) AS duration_seconds FROM desk) AS daily_durations GROUP BY height, date) AS daily_totals WHERE height={} GROUP BY height;"
+    GET_TOTAL_TIMES_QUERRY = "SELECT height, SUM(duration_seconds) AS total_duration_seconds FROM ( SELECT height, TIMESTAMPDIFF(SECOND, time, LEAD(time) OVER (ORDER BY time)) AS duration_seconds FROM desk) AS durations GROUP BY height;"
 
     def __init__(self) -> None:
         load_dotenv()
@@ -50,14 +52,47 @@ class DatabaseController:
         try:
             self.connect()
             cursor = self.conn.cursor()
-            cursor.execute(self.GET_ALL_HEIGHTS_QUERRY)
-            rows = cursor.fetchall()
+            cursor.execute(self.GET_ALL_ENTRYS_QUERRY)
+            rows = []
 
-            # get nested list like [[1], [2] , ...] to flat list
-            flat_list = [item for sublist in rows for item in sublist]
-            return {"success": flat_list}
+            for(height, time) in cursor:
+                rows.append({"height": str(height), "time" : str(time)})
+
+            return str(rows)
         except Exception as e:
-            return {"error": f"{e}"}
+            return str(e)
+        finally:
+            self.close()
+            
+    def get_todays_total(self):
+        try:
+            self.connect()
+            cursor = self.conn.cursor()
+            cursor.execute(self.GET_TODAYS_TOTAL_TIME_QUERRY)
+            rows = []
+
+            for (height, total_duration_seconds) in cursor:
+                total_duration_minutes = round(total_duration_seconds / 60)
+                rows.append({"height" : height, "total_duration_seconds" : str(total_duration_minutes)})
+            return str(rows)
+        except Exception as e:
+            return str(e)
+        finally:
+            self.close()
+    
+    def get_all_entrys_by_day(self,day):
+        try:
+            self.connect()
+            cursor = self.conn.cursor()
+            cursor.execute(self.GET_ALL_ENTRYS_OF_DAY_QUERRY.format(day))
+            rows = []
+
+            for(height, time) in cursor:
+                rows.append({"height": str(height), "time" : str(time)})
+
+            return str(rows)
+        except Exception as e:
+            return str(e)
         finally:
             self.close()
 

@@ -1,4 +1,5 @@
 from utils.desk_state import desk_state
+from controllers.db_controller import db_controller
 from bottle import Bottle, abort
 
 height_server = Bottle()
@@ -11,3 +12,11 @@ def current_height():
 @height_server.route('/move')
 def move_desk():
      abort(501)
+     
+@height_server.route('/entrys/<day>')
+def get_todays_entrys(day):
+    if day == "all":
+        return db_controller.get_all_heights()
+    
+    return db_controller.get_all_entrys_by_day(day)
+    
