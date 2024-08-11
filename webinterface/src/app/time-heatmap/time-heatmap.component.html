@@ -13,9 +13,9 @@
         <div
           *ngIf="day.getFullYear() != 1970"
           class="box"
-          matTooltip="{{ day | date : 'dd.MM' }}"
-        >
-        </div>
+          matTooltip="{{ getTooltip(day) }}"
+          [attr.data-level]="getDayLevel(day)"
+        ></div>
       </td>
     </tr>
   </tbody>

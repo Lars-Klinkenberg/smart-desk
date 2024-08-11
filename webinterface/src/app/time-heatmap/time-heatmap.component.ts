@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export const Months = [
   'January',
@@ -95,5 +95,13 @@ export class TimeHeatmapComponent implements OnInit {
     }
 
     return allWeekdays || [];
+  }
+
+  getTooltip(day: Date): string {
+    return day.getDate() + '.' + (day.getMonth() + 1);
+  }
+
+  getDayLevel(day: Date): string {
+    return (Math.floor(Math.random() * 4) + 1).toString();
   }
 }
