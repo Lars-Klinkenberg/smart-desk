@@ -1,3 +1,22 @@
-<table>
-    <td></td>
+<table class="heatmap-wrapper">
+  <thead>
+    <tr class="table-header">
+      <th>Month</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let week of [1, 2, 3, 4, 5, 6, 0]">
+      <td>
+        {{ WEEKDAYS[week] }}
+      </td>
+      <td *ngFor="let day of getAllDaysByDayOfWeek(week, year)">
+        <div
+          *ngIf="day.getFullYear() != 1970"
+          class="box"
+          matTooltip="{{ day | date : 'dd.MM' }}"
+        >
+        </div>
+      </td>
+    </tr>
+  </tbody>
 </table>
