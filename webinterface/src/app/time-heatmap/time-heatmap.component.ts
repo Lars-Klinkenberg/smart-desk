@@ -118,4 +118,17 @@ export class TimeHeatmapComponent implements OnInit {
       );
     });
   }
+
+  getClassname(day: Date): string {
+    return day.getMonth() % 2 == 0 ? 'month-even' : 'month-odd';
+  }
+
+  getMonthColWidth(month: string): string {
+    let firstRow = this.getAllDaysByDayOfWeek(1, this.year);
+    let daysOfMonth = firstRow.filter((day) => {
+      return day.getMonth() == this.MONTHS.indexOf(month);
+    });
+
+    return daysOfMonth.length.toString();
+  }
 }
