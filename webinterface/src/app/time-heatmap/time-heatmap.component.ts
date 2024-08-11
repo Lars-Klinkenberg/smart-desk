@@ -39,10 +39,13 @@ export class TimeHeatmapComponent implements OnInit {
   WEEKDAYS = Weekdays;
 
   year: Date[] = [];
+  heightData = new Map<string, number>();
 
   ngOnInit(): void {
+    let currentYear = new Date().getFullYear();
     this.year = [];
-    this.year.push(...this.getAllDaysOfYear(new Date().getFullYear()));
+    this.year.push(...this.getAllDaysOfYear(currentYear));
+    this.loadHeightData(currentYear);
   }
 
   /**
@@ -102,6 +105,17 @@ export class TimeHeatmapComponent implements OnInit {
   }
 
   getDayLevel(day: Date): string {
-    return (Math.floor(Math.random() * 4) + 1).toString();
+    return this.heightData.get(day.toLocaleDateString())?.toString() ?? '0';
+  }
+
+  loadHeightData(year: number) {
+    this.heightData.clear();
+
+    this.getAllDaysOfYear(year).forEach((day) => {
+      this.heightData.set(
+        day.toLocaleDateString(),
+        Math.floor(Math.random() * 4) + 1
+      );
+    });
   }
 }
