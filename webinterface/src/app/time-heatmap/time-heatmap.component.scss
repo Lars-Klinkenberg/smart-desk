@@ -1,47 +1,68 @@
-table {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    border-spacing: 0;
-}
+.heatmap-wrapper {
+    display: flex;
+    flex-direction: column;
 
-th,
-td {
-    margin: 0;
-    padding: 2px;
-}
-
-th {
-    font-weight: 400;
-}
-
-.box {
-    background-color: #161b22;
-    width: 15px;
-    height: 15px;
-    border-radius: 2px;
-
-    &[data-level="1"] {
-        background-color: #0e4429;
+    table {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-spacing: 0;
     }
 
-    &[data-level="2"] {
-        background-color: #006d32;
+    th,
+    td {
+        margin: 0;
+        padding: 2px;
     }
 
-    &[data-level="3"] {
-        background-color: #26a641;
+    th {
+        font-weight: 400;
     }
 
-    &[data-level="4"] {
-        background-color: #39d353;
+    .box {
+        background-color: #161b22;
+        width: 15px;
+        height: 15px;
+        border-radius: 2px;
+
+        &[data-level="1"] {
+            background-color: #0e4429;
+        }
+
+        &[data-level="2"] {
+            background-color: #006d32;
+        }
+
+        &[data-level="3"] {
+            background-color: #26a641;
+        }
+
+        &[data-level="4"] {
+            background-color: #39d353;
+        }
     }
-}
 
-.month-even {
-    background-color: #d3d3d3c4;
-}
+    .month-even {
+        background-color: #d3d3d3c4;
+    }
 
-.month-odd {
-    background-color: #c0c0c0c5;
+    .month-odd {
+        background-color: #c0c0c0c5;
+    }
+
+    .legend {
+        display: flex;
+        flex-direction: row;
+        align-self: flex-end;
+        margin: 10px;
+
+        .label {
+            margin: 0 5px;
+        }
+
+        .box {
+            margin: 1px;
+        }
+    }
+
 }

@@ -31,4 +31,14 @@
       </tr>
     </tbody>
   </table>
+  <div class="legend">
+    <div class="label">Less</div>
+    <div
+      class="box"
+      *ngFor="let level of [0, 1, 2, 3, 4]"
+      [attr.data-level]="level"
+      matTooltip="{{ level * 0.5 + 'h' }}"
+    ></div>
+    <div class="label">More</div>
+  </div>
 </div>
