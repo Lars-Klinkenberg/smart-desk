@@ -49,6 +49,10 @@ I mapped the cables from top to bottom as following to the pcb:
 - Serial ports on the Raspberry Pi must be enabled.
 
 ## Used Libraries
+sudo apt-get install python3-dev
+sudo apt-get install -y libmariadb-dev
+pip3 install mariadb
+sudo apt install mariadb-server
 
 ```bash
 pip install pyserial
@@ -58,3 +62,23 @@ pip install rpi.gpio
 pip install python-dotenv
 pip install mariadb
 ```
+
+## Running the Project
+### Installation
+to install all dependencies run
+```bash
+bash install.sh
+```
+
+### Starting
+to start the project simply run 
+`python main.py`
+
+### Start on powerup
+If you want the project to start run
+`crontab -e`
+
+and add:
+
+@reboot bash path-to-project/smart-desk/desk-controller/start_script.sh
+
