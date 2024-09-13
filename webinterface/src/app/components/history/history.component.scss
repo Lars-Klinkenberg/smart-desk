@@ -1,0 +1,36 @@
+.logs {
+    color: #bebebf;
+    padding: 2%;
+
+    .title {
+        margin: 0;
+    }
+
+    .divider {
+        margin-bottom: 10px;
+    }
+
+    .entry-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        margin-bottom: 5px;
+
+        .entry {
+            display: inline;
+            background-color: #2f2f33;
+            padding: 10px;
+            width: 50%;
+
+            .height {
+                width: 20%;
+            }
+
+            .time {
+                width: auto;
+                margin-right: 5%;
+                float: right;
+            }
+        }
+    }
+}

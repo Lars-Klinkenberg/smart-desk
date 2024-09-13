@@ -1,0 +1,13 @@
+<div class="logs">
+  <h3 class="title">See all current logs</h3>
+  <hr class="divider" />
+  <div
+    class="entry-container"
+    *ngFor="let entry of completeHistory | async; let i = index"
+  >
+    <div class="entry" *ngIf="i < MAX_LOG_COUNT">
+      <span class="height">{{ entry.height }}</span>
+      <span class="time">{{ entry.time }}</span>
+    </div>
+  </div>
+</div>
