@@ -139,6 +139,7 @@ export class TimeHeatmapComponent implements OnInit {
     this.timeService.getDailyActivity().subscribe((data) => {
       this.getAllDaysOfYear(year).forEach((day) => {
         let hasDataValues = data.filter((activity) => {
+          if (!activity.day) return;
           return new Date(activity.day).toDateString() == day.toDateString();
         });
 

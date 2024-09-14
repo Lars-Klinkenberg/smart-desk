@@ -4,19 +4,19 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    background-color: #2f2f33;
     padding: 1%;
     box-sizing: border-box;
-
+    background-color: #fff;
 
 
     .main {
-        width: 66%;
+        width: 80%;
         height: 100%;
 
         .daily-activity {
-            background-color: #525259;
             height: 50%;
+            border-radius: 20px;
+            padding: 2%;
         }
 
         .charts {
@@ -46,9 +46,13 @@
     }
 
     .side {
-        width: 33%;
+        width: 20%;
         height: 91%;
-        background-color: #525259;
+        padding: 1%;
+
+        .spacer {
+            height: 5%;
+        }
     }
 }
 
