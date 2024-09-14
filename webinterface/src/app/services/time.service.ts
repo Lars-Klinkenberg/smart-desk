@@ -12,22 +12,23 @@ export class TimeService {
 
   getDailyActivity(): Observable<DailyActivity[]> {
     return this.http.get<DailyActivity[]>(
-      environment.BASE_URL + '/time/activity/115',
-      {
-        responseType: 'json',
-      }
+      environment.BASE_URL + '/time/activity/115'
     );
   }
 
   /**
    * turns an activity time like "0:34:25" to an hour as number like 0,56
-   * @param activity 
-   * @returns 
+   * @param activity
+   * @returns
    */
   getHoursOfActivity(activity: DailyActivity): number {
     let splitted = activity.total_time.split(':');
     let hoursAsMinutes = Number(splitted[0]) * 60;
     let totalMinutes = hoursAsMinutes + Number(splitted[1]);
     return totalMinutes / 60;
+  }
+
+  getTodaysStandingTime(): Observable<DailyActivity[]> {
+    return this.http.get<DailyActivity[]>(environment.BASE_URL + '/time/today');
   }
 }

@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { TimeHeatmapComponent } from './components/time-heatmap/time-heatmap.component';
 import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { HistoryComponent } from './components/history/history.component';
+import { StatsComponent } from "./components/stats/stats.component";
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ import { HistoryComponent } from './components/history/history.component';
     TimeHeatmapComponent,
     PieChartComponent,
     HistoryComponent,
-  ],
+    StatsComponent
+],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

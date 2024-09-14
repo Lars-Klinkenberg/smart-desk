@@ -1,4 +1,5 @@
 export interface DailyActivity {
-  day: Date;
+  day?: Date;
+  height?: number,
   total_time: string;
 }
