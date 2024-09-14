@@ -36,7 +36,7 @@
       class="box"
       *ngFor="let level of [0, 1, 2, 3, 4]"
       [attr.data-level]="level"
-      matTooltip="{{ level * 0.5 + 'h' }}"
+      matTooltip="{{ level * 0.25 * 60 + 'min' }}"
     ></div>
     <div class="label">More</div>
   </div>
