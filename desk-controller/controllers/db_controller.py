@@ -1,6 +1,7 @@
 import os
 import mariadb
 from dotenv import load_dotenv
+import json
 
 class DatabaseController:
     INSERT_HEIGHT_QUERRY = "INSERT INTO desk (height) VALUES ({});"
@@ -58,9 +59,9 @@ class DatabaseController:
             for(height, time) in cursor:
                 rows.append({"height": str(height), "time" : str(time)})
 
-            return str(rows)
+            return json.dumps(rows)
         except Exception as e:
-            return str(e)
+            return json.dumps({"error": str(e)})
         finally:
             self.close()
             
