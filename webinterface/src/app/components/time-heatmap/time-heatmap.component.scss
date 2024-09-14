@@ -27,6 +27,10 @@
         height: 15px;
         border-radius: 2px;
 
+        &[data-level="no-data"] {
+            background-color: #cacaca;
+        }
+
         &[data-level="1"] {
             background-color: #8bbf51;
         }

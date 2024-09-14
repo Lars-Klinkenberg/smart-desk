@@ -120,7 +120,7 @@ export class TimeHeatmapComponent implements OnInit {
   getDayLevel(day: Date): string {
     let time = this.heightData.get(day.toLocaleDateString());
 
-    if (!time) return '0';
+    if (!time) return 'no-data';
     if (time >= 1) return '4';
     if (time >= 0.75) return '3';
     if (time >= 0.5) return '2';
