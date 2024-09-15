@@ -1,12 +1,12 @@
-<div class="logs">
-  <h3 class="title">See all current logs</h3>
-  <hr class="divider" />
-  <div class="entry-container">
-    <div class="entry header">
-      <span class="height">height</span>
-      <span class="time">timestamp</span>
-    </div>
+<h3 class="title">See all current logs</h3>
+<hr class="divider" />
+<div class="entry-container">
+  <div class="entry header">
+    <span class="height">height</span>
+    <span class="time">timestamp</span>
   </div>
+</div>
+<div class="logs">
   <div
     class="entry-container"
     *ngFor="let entry of completeHistory | async; let i = index"
