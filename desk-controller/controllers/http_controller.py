@@ -1,8 +1,11 @@
 import requests
 import os
+from dotenv import load_dotenv
 
 class HttpController:
-    BASE_URL = os.getenv("API_BASE_URL")
+    def __init__(self) -> None:
+        load_dotenv()
+        self.BASE_URL = os.getenv("API_BASE_URL")
     
     def save_height(self, height):
         # TODO: add error handling
