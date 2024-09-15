@@ -1,13 +1,21 @@
-from utils.desk_state import desk_state
 from controllers.db_controller import db_controller
 from bottle import Bottle, abort, response
+import json
 
 height_server = Bottle()
 
+@height_server.route('/save/<height>')
+def current_height(height):
+    try:
+        db_controller.save_height(height)
+        return json.dumps({"success": "saved height :" + height})
+    except Exception as e:
+        return json.dumps({"error": str(e)})
 
 @height_server.route('/current')
 def current_height():
-    return str(desk_state.get_height())
+    abort(501)
+
 
 @height_server.route('/move')
 def move_desk():

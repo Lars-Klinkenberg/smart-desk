@@ -16,5 +16,6 @@ pip install bottle
 pip install rpi.gpio
 pip install python-dotenv
 pip3 install mariadb
+pip install requests
 
 python main.py
