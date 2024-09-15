@@ -37,7 +37,7 @@ export class TimeService {
     return totalMinutes / 60;
   }
 
-  formatMinutesToTimeString(minutes: number): string {
+  formatMinutesToTimeString(minutes: number, showSeconds = true): string {
     const hrs = Math.floor(minutes / 60); // Get the whole hours
     const mins = Math.floor(minutes % 60); // Get the remaining minutes
     const secs = Math.floor((minutes % 1) * 60); // Get the remaining seconds if there are fractions
@@ -46,6 +46,10 @@ export class TimeService {
     const hoursStr = String(hrs).padStart(2, '0');
     const minutesStr = String(mins).padStart(2, '0');
     const secondsStr = String(secs).padStart(2, '0');
+
+    if (!showSeconds) {
+      return `${hoursStr}:${minutesStr}`;
+    }
 
     return `${hoursStr}:${minutesStr}:${secondsStr}`;
   }

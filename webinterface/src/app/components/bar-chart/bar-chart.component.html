@@ -1,0 +1,12 @@
+<div class="chart-container">
+  <hr class="goal-line" [style.top]="getGoalHeight()" />
+  <div class="bar-container">
+    <div
+      class="bar"
+      *ngFor="let barData of data"
+      [style.height]="getBarHeight(barData)"
+    >
+      {{ getBarLabel(barData) }}
+    </div>
+  </div>
+</div>
