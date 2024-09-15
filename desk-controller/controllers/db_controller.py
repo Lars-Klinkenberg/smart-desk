@@ -5,7 +5,7 @@ import json
 
 class DatabaseController:
     INSERT_HEIGHT_QUERRY = "INSERT INTO desk (height) VALUES ({});"
-    GET_ALL_ENTRYS_QUERRY = "SELECT height, time FROM desk;"
+    GET_ALL_ENTRYS_QUERRY = "SELECT height, time FROM desk ORDER BY time DESC LIMIT {};"
     GET_ALL_ENTRYS_OF_DAY_QUERRY = "SELECT height, time FROM desk WHERE DATE(time) = '{}';"
     GET_AVG_TOTAL_TIME_QUERRY = "SELECT height, AVG(total_duration_seconds) AS avg_daily_duration_seconds FROM (SELECT height, date, SUM(duration_seconds) AS total_duration_seconds FROM (SELECT height, DATE(time) AS date, TIMESTAMPDIFF(SECOND, time, COALESCE(LEAD(time) OVER (PARTITION BY DATE(time) ORDER BY time), DATE_ADD(DATE(time), INTERVAL 1 DAY))) AS duration_seconds FROM desk) AS daily_durations GROUP BY height, date) AS daily_totals GROUP BY height;"
     GET_SPECIFIC_AVG_TOTAL_TIME_QUERRY = "SELECT AVG(total_duration_seconds) AS avg_daily_duration_seconds FROM (SELECT height, date, SUM(duration_seconds) AS total_duration_seconds FROM (SELECT height, DATE(time) AS date, TIMESTAMPDIFF(SECOND, time, COALESCE(LEAD(time) OVER (PARTITION BY DATE(time) ORDER BY time), DATE_ADD(DATE(time), INTERVAL 1 DAY))) AS duration_seconds FROM desk) AS daily_durations GROUP BY height, date) AS daily_totals WHERE height={} GROUP BY height;"
@@ -49,11 +49,11 @@ class DatabaseController:
         finally:
             self.close()
 
-    def get_all_heights(self):
+    def get_all_heights(self, limit):
         try:
             self.connect()
             cursor = self.conn.cursor()
-            cursor.execute(self.GET_ALL_ENTRYS_QUERRY)
+            cursor.execute(self.GET_ALL_ENTRYS_QUERRY.format(limit))
             rows = []
 
             for(height, time) in cursor:

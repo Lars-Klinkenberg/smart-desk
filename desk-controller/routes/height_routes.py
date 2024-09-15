@@ -18,7 +18,7 @@ def get_todays_entrys(day):
     response.headers['Content-type'] = 'application/json'
 
     if day == "all":
-        return db_controller.get_all_heights()
+        return db_controller.get_all_heights(15)
     
     return db_controller.get_all_entrys_by_day(day)
     
