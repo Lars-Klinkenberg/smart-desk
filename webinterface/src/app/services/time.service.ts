@@ -16,6 +16,15 @@ export class TimeService {
     );
   }
 
+  getTodaysStandingTime(): Observable<DailyActivity[]> {
+    return this.http.get<DailyActivity[]>(environment.BASE_URL + '/time/today');
+  }
+
+  getYesterdaysStandingTime(): Observable<DailyActivity[]> {
+    return this.http.get<DailyActivity[]>(
+      environment.BASE_URL + '/time/yesterday'
+    );
+  }
   /**
    * turns an activity time like "0:34:25" to an hour as number like 0,56
    * @param activity
@@ -28,7 +37,16 @@ export class TimeService {
     return totalMinutes / 60;
   }
 
-  getTodaysStandingTime(): Observable<DailyActivity[]> {
-    return this.http.get<DailyActivity[]>(environment.BASE_URL + '/time/today');
+  formatMinutesToTimeString(minutes: number): string {
+    const hrs = Math.floor(minutes / 60); // Get the whole hours
+    const mins = Math.floor(minutes % 60); // Get the remaining minutes
+    const secs = Math.floor((minutes % 1) * 60); // Get the remaining seconds if there are fractions
+
+    // Pad the hours, minutes, and seconds to always show two digits
+    const hoursStr = String(hrs).padStart(2, '0');
+    const minutesStr = String(mins).padStart(2, '0');
+    const secondsStr = String(secs).padStart(2, '0');
+
+    return `${hoursStr}:${minutesStr}:${secondsStr}`;
   }
 }
