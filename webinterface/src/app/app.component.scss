@@ -14,7 +14,7 @@
         height: 100%;
 
         .daily-activity {
-            height: 50%;
+            height: 30%;
             border-radius: 20px;
             padding: 2%;
         }
@@ -35,7 +35,7 @@
 
                 .col {
                     height: 100%;
-                    width: 48%;
+                    width: 28%;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
@@ -47,11 +47,20 @@
 
     .side {
         width: 20%;
+        height: 100%;
         height: 91%;
         padding: 1%;
 
+
         .spacer {
             height: 5%;
+        }
+
+        .side-image{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 }
@@ -59,15 +68,13 @@
 
 .placeholder {
     flex-grow: 1;
-    background-color: #525259;
     max-height: 49%;
     max-width: 100%;
 }
 
 .placeholder2 {
     height: 100%;
-    width: 50%;
+    width: 70%;
     aspect-ratio: 1/1;
-    background-color: #525259;
     margin-left: 10px;
 }
