@@ -4,7 +4,7 @@ import json
 
 height_server = Bottle()
 
-@height_server.route('/save')
+@height_server.post('/save')
 def current_height():
     response.headers['Content-type'] = 'application/json'
     height = request.headers.get("height")
