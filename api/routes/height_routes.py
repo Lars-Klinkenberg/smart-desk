@@ -1,16 +1,21 @@
 from controllers.db_controller import db_controller
-from bottle import Bottle, abort, response
+from bottle import Bottle, abort, response, request, HTTPResponse
 import json
 
 height_server = Bottle()
 
-@height_server.route('/save/<height>')
-def current_height(height):
+@height_server.route('/save')
+def current_height():
+    response.headers['Content-type'] = 'application/json'
+    height = request.headers.get("height")
+
+    if(height is None): 
+        return HTTPResponse(status=400, body=json.dumps({"error": "height missing"}))
     try:
         db_controller.save_height(height)
-        return json.dumps({"success": "saved height :" + height})
+        return json.dumps({"success": "saved height: " + height})
     except Exception as e:
-        return json.dumps({"error": str(e)})
+        return HTTPResponse(status=500, body=json.dumps({"error": str(e)}))
 
 @height_server.route('/current')
 def current_height():
