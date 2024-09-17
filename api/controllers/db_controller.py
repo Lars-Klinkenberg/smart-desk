@@ -2,6 +2,7 @@ import os
 import mariadb
 from dotenv import load_dotenv
 import json
+from datetime import datetime
 
 
 class DatabaseController:
@@ -44,7 +45,7 @@ class DatabaseController:
         try:
             if not self.validate_latest_entry(height):
                 raise Exception("height or latest entry not valid")
-            
+
             self.connect()
             cursor = self.conn.cursor()
             cursor.execute(SAVE_END_HEIGHT_QUERY.format(height))
@@ -57,32 +58,21 @@ class DatabaseController:
             self.close()
 
     def get_all_heights(self, limit):
-        query = "SELECT height, time FROM desk ORDER BY time DESC LIMIT {};"
+        query = "CALL getAllHeights({});"
 
         try:
             cursor = self.execute_query(query.format(limit))
             rows = []
 
-            for height, time in cursor:
-                rows.append({"height": str(height), "time": str(time)})
-
-            return json.dumps(rows)
-        except Exception as e:
-            return json.dumps({"error": str(e)})
-        finally:
-            self.close()
-
-    def get_todays_total(self, height):
-        query = "SELECT height, SUM(duration_seconds) AS total_duration_seconds FROM ( SELECT height, TIMESTAMPDIFF(SECOND, time, LEAD(time) OVER (ORDER BY time)) AS duration_seconds FROM desk WHERE DATE(time) = CURDATE()) AS durations WHERE height={} GROUP BY height;"
-
-        try:
-            cursor = self.execute_query(query.format(height))
-            rows = []
-
-            for height, total_duration_seconds in cursor:
-                total_duration_minutes = round(total_duration_seconds / 60)
+            for id, start_time, start_height, end_time, end_height in cursor:
                 rows.append(
-                    {"height": height, "total_time": str(total_duration_minutes)}
+                    {
+                        "id": str(id),
+                        "start_time": str(start_time),
+                        "start_height": str(start_height),
+                        "end_time": str(end_time),
+                        "end_height": str(end_height),
+                    }
                 )
 
             return json.dumps(rows)
@@ -91,17 +81,44 @@ class DatabaseController:
         finally:
             self.close()
 
-    def get_all_entrys_by_day(self, day):
-        query = "SELECT height, time FROM desk WHERE DATE(time) = '{}';"
+    def get_todays_total(self, height):
+        query = "CALL getTodaysTotals();"
 
         try:
-            cursor = self.execute_query(query.format(day))
+            cursor = self.execute_query(query.format(height))
             rows = []
 
-            for height, time in cursor:
-                rows.append({"height": str(height), "time": str(time)})
+            for total_time, height in cursor:
+                rows.append({"height": height, "total_time": str(total_time)})
 
             return json.dumps(rows)
+        except Exception as e:
+            return json.dumps({"error": str(e)})
+        finally:
+            self.close()
+
+    def get_all_entrys_by_day(self, day):
+        query = "CALL getAllHeightsOfDay('{}');"
+
+        try:
+            dayFormated = datetime.strptime(day, "%Y-%m-%d").date()
+            cursor = self.execute_query(query.format(dayFormated))
+            rows = []
+
+            for id, start_time, start_height, end_time, end_height in cursor:
+                rows.append(
+                    {
+                        "id": str(id),
+                        "start_time": str(start_time),
+                        "start_height": str(start_height),
+                        "end_time": str(end_time),
+                        "end_height": str(end_height),
+                    }
+                )
+
+            return json.dumps(rows)
+        except ValueError:
+            return json.dumps({"error": "day not in valid format (yyyy-mm-dd)"})
         except Exception as e:
             return json.dumps({"error": str(e)})
         finally:
