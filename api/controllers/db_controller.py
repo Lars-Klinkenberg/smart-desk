@@ -38,12 +38,18 @@ class DatabaseController:
         return cursor
 
     def save_height(self, height):
-        query = "INSERT INTO desk (height) VALUES ({});"
+        SAVE_END_HEIGHT_QUERY = "CALL saveEndHeight({})"
+        SAVE_START_HEIGHT_QUERY = "CALL saveStartHeight({})"
 
         try:
+            if not self.validate_latest_entry(height):
+                raise Exception("height or latest entry not valid")
+            
             self.connect()
             cursor = self.conn.cursor()
-            cursor.execute(query.format(height))
+            cursor.execute(SAVE_END_HEIGHT_QUERY.format(height))
+            self.conn.commit()
+            cursor.execute(SAVE_START_HEIGHT_QUERY.format(height))
             self.conn.commit()
         except Exception as e:
             raise Exception(e)
@@ -117,6 +123,43 @@ class DatabaseController:
             return json.dumps(rows)
         except Exception as e:
             return json.dumps({"error": str(e)})
+        finally:
+            self.close()
+
+    def validate_latest_entry(self, newHeight) -> bool:
+        query = "CALL getLatestHeight()"
+
+        try:
+            self.connect()
+            cursor = self.execute_query(query)
+            rows = []
+
+            for id, start_time, start_height, end_time, end_height in cursor:
+                rows.append(
+                    {
+                        "id": id,
+                        "start_time": start_time,
+                        "start_height": start_height,
+                        "end_time": end_time,
+                        "end_height": end_height,
+                    }
+                )
+
+            if len(rows) > 1 or len(rows) == 0:
+                raise Exception("getLatestHeight returned none unique result")
+
+            latest_end_height = rows[0].get("end_height")
+            if latest_end_height is not None:
+                raise Exception(f"end_height of id:{rows[0].id} is already set")
+
+            latest_start_height = str(rows[0].get("start_height"))
+
+            if latest_start_height == newHeight:
+                raise Exception(f"end_height of id:{rows[0].id} is equal to new height")
+
+            return True
+        except Exception as e:
+            return False
         finally:
             self.close()
 
