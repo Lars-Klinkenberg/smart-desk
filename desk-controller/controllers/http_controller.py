@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 class HttpController:
     def __init__(self) -> None:
-        load_dotenv()
+        load_dotenv(dotenv_path="../.env")
         self.BASE_URL = os.getenv("API_BASE_URL")
     
     def save_height(self, height):

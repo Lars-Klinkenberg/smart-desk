@@ -7,7 +7,7 @@ from datetime import datetime
 
 class DatabaseController:
     def __init__(self) -> None:
-        load_dotenv()
+        load_dotenv(dotenv_path="../.env")
         self.user = os.getenv("DB_USER")
         self.password = os.getenv("DB_PASSWORD")
         self.host = os.getenv("DB_HOST")
