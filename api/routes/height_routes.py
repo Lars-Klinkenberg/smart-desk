@@ -7,7 +7,6 @@ height_server = Bottle()
 
 @height_server.post("/save")
 def current_height():
-    response.headers["Content-type"] = "application/json"
     height = request.headers.get("height")
 
     if height is None:
@@ -21,12 +20,11 @@ def current_height():
 
 @height_server.route("/current")
 def current_height():
-    abort(501)
+    return db_controller.get_current_height()
 
 
 @height_server.route("/entrys")
 def get_todays_entrys():
-    response.headers["Content-type"] = "application/json"
     day = request.headers.get("day")
     limit = request.headers.get("limit")
 

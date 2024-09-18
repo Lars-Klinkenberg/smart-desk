@@ -30,7 +30,8 @@ class DatabaseController:
             print(f"Failed to connect to database {e}")
 
     def close(self):
-        self.conn.close()
+        if(hasattr(self, 'conn')):
+            self.conn.close()
 
     def execute_query(self, query):
         self.connect()
@@ -81,11 +82,11 @@ class DatabaseController:
         finally:
             self.close()
 
-    def get_todays_total(self, height):
-        query = "CALL getTodaysTotals();"
+    def get_todays_total(self):
+        query = "CALL getTotalsOfDay(CURDATE());"
 
         try:
-            cursor = self.execute_query(query.format(height))
+            cursor = self.execute_query(query)
             rows = []
 
             for total_time, height in cursor:
@@ -124,20 +125,41 @@ class DatabaseController:
         finally:
             self.close()
 
-    def get_yesterdays_total(self, height):
-        query = "SELECT height, SUM(duration_seconds) AS total_duration_seconds FROM ( SELECT height, TIMESTAMPDIFF(SECOND, time, LEAD(time) OVER (ORDER BY time)) AS duration_seconds FROM desk WHERE DATE(time) = CURDATE() - INTERVAL 1 DAY) AS durations WHERE height={} GROUP BY height;"
+    def get_yesterdays_total(self):
+        query = "CALL getTotalsOfDay(CURDATE() - INTERVAL 1 DAY);"
 
         try:
-            cursor = self.execute_query(query.format(height))
+            cursor = self.execute_query(query)
             rows = []
 
-            for height, total_duration_seconds in cursor:
-                total_duration_minutes = round(total_duration_seconds / 60)
+            for total_time, height in cursor:
                 rows.append(
-                    {"height": height, "total_time": str(total_duration_minutes)}
+                    {"height": height, "total_time": str(total_time)}
                 )
 
             return json.dumps(rows)
+        except Exception as e:
+            return json.dumps({"error": str(e)})
+        finally:
+            self.close()
+
+    def get_totals_of_day(self, day):
+        query = "CALL getTotalsOfDay('{}');"
+
+        try:
+            dayFormated = datetime.strptime(day, "%Y-%m-%d").date()
+            print(query.format(dayFormated))
+            cursor = self.execute_query(query.format(dayFormated))
+            rows = []
+
+            for total_time, height in cursor:
+                rows.append(
+                    {"height": height, "total_time": str(total_time)}
+                )
+
+            return json.dumps(rows)
+        except ValueError:
+            return json.dumps({"error": "day not in valid format (yyyy-mm-dd)"})
         except Exception as e:
             return json.dumps({"error": str(e)})
         finally:
@@ -180,5 +202,21 @@ class DatabaseController:
         finally:
             self.close()
 
+    def get_current_height(self):
+        query = "CALL getLatestHeight();"
+
+        try:
+            cursor = self.execute_query(query)
+            height = 0
+            
+            for id, start_time, start_height, end_time, end_height in cursor:
+                print(start_height)
+                height = start_height
+
+            return json.dumps({"height": start_height})
+        except Exception as e:
+            return json.dumps({"error": str(e)})
+        finally:
+            self.close()
 
 db_controller = DatabaseController()

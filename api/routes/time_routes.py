@@ -1,27 +1,21 @@
-from bottle import Bottle, abort, response
+from bottle import Bottle, request
 from controllers.db_controller import db_controller
+
 time_server = Bottle()
 
 
-@time_server.route('/avg')
-def get_avg_standing_time():
-    abort(501)
-
-@time_server.route('/percentage')
-def get_percentage_standing_time():
-     abort(501)
-     
-@time_server.route('/today')
+@time_server.route("/today")
 def get_todays_total_time():
-    response.headers['Content-type'] = 'application/json'
-    return db_controller.get_todays_total(115)
+    return db_controller.get_todays_total()
 
-@time_server.route('/yesterday')
+
+@time_server.route("/yesterday")
 def get_todays_total_time():
-    response.headers['Content-type'] = 'application/json'
-    return db_controller.get_yesterdays_total(115)
+    return db_controller.get_yesterdays_total()
 
-@time_server.route('/activity/<height>')
-def get_daily_activity(height):
-    response.headers['Content-type'] = 'application/json'
-    return db_controller.get_daily_activity(height)
+
+@time_server.route("/day")
+def get_todays_total_time():
+    day = request.headers.get("day")
+
+    return db_controller.get_totals_of_day(day)
