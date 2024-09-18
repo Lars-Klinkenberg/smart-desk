@@ -31,9 +31,57 @@ CREATE TABLE monthly_avg(
 
 DELIMITER //
 
-CREATE PROCEDURE getAllHeights()
+CREATE PROCEDURE saveStartHeight(
+    IN height INT
+)
 BEGIN
-	SELECT * FROM your_table ORDER BY id DESC LIMIT 1;
+	INSERT INTO heights (start_height) VALUES (height);
+END //
+
+
+CREATE PROCEDURE saveEndHeight(
+    IN height INT
+)
+BEGIN
+	UPDATE heights SET end_time = CURRENT_TIMESTAMP(), end_height = height ORDER BY id DESC LIMIT 1;
+END //
+
+
+CREATE PROCEDURE getLatestHeight()
+BEGIN
+	SELECT * FROM heights ORDER BY id DESC LIMIT 1;
+END //
+
+
+CREATE PROCEDURE getAllHeights(
+    IN `lim_val` INT
+)
+BEGIN
+	SELECT * FROM heights ORDER BY id DESC LIMIT lim_val;
+END //
+
+CREATE PROCEDURE getAllHeightsOfDay(
+    IN day DATE
+)
+BEGIN
+	SELECT * FROM heights  WHERE DATE(start_time) = day ORDER BY id DESC;
+END //
+
+CREATE PROCEDURE getTotalsOfDay(
+    IN day DATE
+)
+BEGIN
+    SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)))) as total_time, start_height as height FROM heights WHERE DATE(start_time) = day GROUP BY height;
+END //
+
+CREATE PROCEDURE getMonthlyTotals()
+BEGIN
+    SELECT height, Month(day) as id_of_month, SEC_TO_TIME(SUM(TIME_TO_SEC(total_time))) as total_time FROM daily_avg GROUP BY height, Month(day);
+END //
+
+CREATE PROCEDURE getWeeklysTotals()
+BEGIN
+    SELECT height, DAYOFWEEK(day) as id_of_day, SEC_TO_TIME(SUM(TIME_TO_SEC(total_time))) as total_time FROM daily_avg GROUP BY height, id_of_day SORT BY ;
 END //
 
 DELIMITER ;

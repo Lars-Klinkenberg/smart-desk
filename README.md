@@ -70,6 +70,14 @@ to install all dependencies run
 bash install.sh
 ```
 
+#### Configure DB
+start the mariadb cli with
+`sudo mysql -u root -q`
+and execute
+`source path/documentation/database.sql`
+to load the db configuration
+
+
 ### Starting
 to start the project simply run 
 `python main.py`
