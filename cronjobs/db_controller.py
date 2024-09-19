@@ -43,7 +43,7 @@ class DatabaseController:
         save_query = "CALL saveDailyTotal('{}', {}, '{}')"
 
         try:
-            print(save_query.format(day, height, time))
+            print(f"saving daily total for: {day} at height {height} and time {time} ")
             self.connect()
             cursor = self.conn.cursor()
             cursor.execute(save_query.format(day, height, time))
@@ -57,7 +57,9 @@ class DatabaseController:
         save_query = "CALL saveMonthlyAvg({}, '{}', {}, {})"
 
         try:
-            print(save_query.format(height, time, id_of_month, year))
+            print(
+                f"saving monthly avg for: {id_of_month}.{year} at height {height} and time {time} "
+            )
             self.connect()
             cursor = self.conn.cursor()
             cursor.execute(save_query.format(height, time, id_of_month, year))
