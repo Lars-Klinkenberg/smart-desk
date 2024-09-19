@@ -30,8 +30,9 @@ class DatabaseController:
             print(f"Failed to connect to database {e}")
 
     def close(self):
-        if(hasattr(self, 'conn')):
+        if self.conn is not None:
             self.conn.close()
+            self.conn = None
 
     def execute_query(self, query):
         self.connect()
