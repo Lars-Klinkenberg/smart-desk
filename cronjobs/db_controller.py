@@ -53,6 +53,20 @@ class DatabaseController:
         finally:
             self.close()
 
+    def save_monthly_avg(self, height, time, id_of_month, year):
+        save_query = "CALL saveMonthlyAvg({}, '{}', {}, {})"
+
+        try:
+            print(save_query.format(height, time, id_of_month, year))
+            self.connect()
+            cursor = self.conn.cursor()
+            cursor.execute(save_query.format(height, time, id_of_month, year))
+            self.conn.commit()
+        except Exception as e:
+            raise Exception(e)
+        finally:
+            self.close()
+
     def get_totals_of_day(self, day):
         query = "CALL getTotalsOfDay('{}')"
         rows = []
@@ -82,6 +96,38 @@ class DatabaseController:
 
             for id, height, total_time, day in cursor:
                 rows.append({"total_time": str(total_time), "height": height})
+
+        except Exception as e:
+            print("error: ", str(e))
+        finally:
+            self.close()
+            return rows
+
+    def get_monthly_avg_entrys_of_month(self, id_of_month, year):
+        query = "CALL getMonthlyAvgEntrysOfMonth({}, {})"
+        rows = []
+
+        try:
+            cursor = self.execute_query(query.format(id_of_month, year))
+
+            for id, height, total_time, id_of_month, year in cursor:
+                rows.append({"total_time": str(total_time), "height": height})
+
+        except Exception as e:
+            print("error: ", str(e))
+        finally:
+            self.close()
+            return rows
+
+    def get_month_avgs(self, id_of_month, year):
+        query = "CALL getMonthAvgs({}, {})"
+        rows = []
+
+        try:
+            cursor = self.execute_query(query.format(id_of_month, year))
+
+            for height, avg_time in cursor:
+                rows.append({"avg_time": str(avg_time), "height": height})
 
         except Exception as e:
             print("error: ", str(e))
