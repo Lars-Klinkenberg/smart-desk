@@ -14,7 +14,7 @@ CREATE TABLE heights(
     end_height INT
 );
 
-CREATE TABLE daily_avg(
+CREATE TABLE daily_totals(
     id INT AUTO_INCREMENT PRIMARY KEY,
     height INT,
     total_time TIME,
@@ -95,6 +95,15 @@ CREATE PROCEDURE getDailyTotalsEntrysOfDay(
 )
 BEGIN
     SELECT * FROM daily_totals WHERE DATE(day) = selectedDay;
+END //
+
+CREATE PROCEDURE saveDailyTotal(
+    IN day_in DATE,
+    IN height_in INT,
+    IN total_time_in TIME
+)
+BEGIN
+    INSERT INTO daily_totals (height, total_time, day) VALUES (height_in, total_time_in, day_in);
 END //
 
 DELIMITER ;
