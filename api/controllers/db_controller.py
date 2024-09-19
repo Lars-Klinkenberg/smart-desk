@@ -134,9 +134,7 @@ class DatabaseController:
             rows = []
 
             for total_time, height in cursor:
-                rows.append(
-                    {"height": height, "total_time": str(total_time)}
-                )
+                rows.append({"height": height, "total_time": str(total_time)})
 
             return json.dumps(rows)
         except Exception as e:
@@ -154,9 +152,7 @@ class DatabaseController:
             rows = []
 
             for total_time, height in cursor:
-                rows.append(
-                    {"height": height, "total_time": str(total_time)}
-                )
+                rows.append({"height": height, "total_time": str(total_time)})
 
             return json.dumps(rows)
         except ValueError:
@@ -209,7 +205,7 @@ class DatabaseController:
         try:
             cursor = self.execute_query(query)
             height = 0
-            
+
             for id, start_time, start_height, end_time, end_height in cursor:
                 print(start_height)
                 height = start_height
@@ -219,5 +215,22 @@ class DatabaseController:
             return json.dumps({"error": str(e)})
         finally:
             self.close()
+
+    def get_daily_totals_of_year(self, year):
+        query = "CALL getDailyTotalsOfYear({});"
+
+        try:
+            cursor = self.execute_query(query.format(year))
+            rows = []
+
+            for id, height, total_time, day in cursor:
+                rows.append({"height": height, "total_time": str(total_time), "day": str(day)})
+
+            return json.dumps(rows)
+        except Exception as e:
+            return json.dumps({"error": str(e)})
+        finally:
+            self.close()
+
 
 db_controller = DatabaseController()
