@@ -77,10 +77,13 @@ BEGIN
     SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)))) as total_time, start_height as height FROM heights WHERE DATE(start_time) = day GROUP BY height;
 END //
 
--- Get the avg of each height for each Month 
-CREATE PROCEDURE getMonthAvgs()
+-- Get the avg of each height for each Month by id of month and year
+CREATE PROCEDURE getMonthAvgs(
+    IN month INT,
+    IN year INT
+)
 BEGIN
-    SELECT height, Month(day) as id_of_month, SEC_TO_TIME(AVG(TIME_TO_SEC(total_time))) as avg_time FROM daily_totals GROUP BY height, Month(day) ORDER BY id_of_month;
+    SELECT height , SEC_TO_TIME(AVG(TIME_TO_SEC(total_time))) as avg_time FROM daily_totals WHERE Month(day) = month AND Year(day) = year GROUP BY height, Month(day) ORDER BY Month(day);
 END //
 
 -- Get the avg of each day of the week
@@ -97,6 +100,7 @@ BEGIN
     SELECT * FROM daily_totals WHERE DATE(day) = selectedDay;
 END //
 
+-- saves day, height and total_time to table daily_totals
 CREATE PROCEDURE saveDailyTotal(
     IN day_in DATE,
     IN height_in INT,
@@ -104,6 +108,26 @@ CREATE PROCEDURE saveDailyTotal(
 )
 BEGIN
     INSERT INTO daily_totals (height, total_time, day) VALUES (height_in, total_time_in, day_in);
+END //
+
+--  get Entrys of monthly_avg of given day
+CREATE PROCEDURE getMonthlyAvgEntrysOfMonth(
+    IN month INT,
+    IN year_in INT
+)
+BEGIN
+    SELECT * FROM monthly_avg WHERE id_of_month = month AND year = year_in;
+END //
+
+-- saves the height, total_time, id_of_month, year to the table monthly_avg
+CREATE PROCEDURE saveMonthlyAvg(
+    IN height_in INT,
+    IN total_time_in TIME,
+    IN id_of_month_in INT,
+    IN year_in INT
+)
+BEGIN
+    INSERT INTO monthly_avg (height, total_time, id_of_month, year) VALUES (height_in, total_time_in, id_of_month_in, year_in);
 END //
 
 DELIMITER ;
