@@ -4,13 +4,27 @@ from datetime import datetime
 
 
 class HeightController(DatabaseController):
+    """
+    handles all the db calls related to the height
+    """
+
     def save_height(self, height):
+        """
+        validates the height and saves it to the db if valid
+
+        Args:
+            height (int): new height to be saved
+
+        Raises:
+            ValueError: if height is not valid
+            RuntimeError: database error
+        """
         SAVE_END_HEIGHT_QUERY = "CALL saveEndHeight({})"
         SAVE_START_HEIGHT_QUERY = "CALL saveStartHeight({})"
 
         try:
             if not self.validate_latest_entry(height):
-                raise Exception("height or latest entry not valid")
+                raise ValueError("height or latest entry not valid")
 
             self.connect()
             cursor = self.conn.cursor()
@@ -19,11 +33,20 @@ class HeightController(DatabaseController):
             cursor.execute(SAVE_START_HEIGHT_QUERY.format(height))
             self.conn.commit()
         except Exception as e:
-            raise Exception(e)
+            raise RuntimeError(e)
         finally:
             self.close()
 
     def get_all_heights(self, limit):
+        """
+        get all heights entrys of current day
+
+        Args:
+            limit (int): limits how many entrys should be returned
+
+        Returns:
+            string: serialized json either [{id, start_time, start_height, end_time, end_height}] or {"error" : "..."}
+        """
         query = "CALL getAllHeights({});"
 
         try:
@@ -48,6 +71,12 @@ class HeightController(DatabaseController):
             self.close()
 
     def get_todays_total(self):
+        """
+        returns the calculated totals of the current day
+
+        Returns:
+            string: serialized json either [{height, total_time}] or {"error" : "..."}
+        """
         query = "CALL getTotalsOfDay(CURDATE());"
 
         try:
@@ -64,6 +93,15 @@ class HeightController(DatabaseController):
             self.close()
 
     def get_all_entrys_by_day(self, day):
+        """
+        returns the heights entrys of given day
+
+        Args:
+            day (string): day in the format yyyy-mm-dd
+
+        Returns:
+            string: serialized json either [{id, start_time, start_height, end_time, end_height}] or {"error" : "..."}
+        """
         query = "CALL getAllHeightsOfDay('{}');"
 
         try:
@@ -91,6 +129,12 @@ class HeightController(DatabaseController):
             self.close()
 
     def get_yesterdays_total(self):
+        """
+        get the totaly of yesterday
+
+        Returns:
+            string: serialized json either [{height, total_time}] or {"error" : "..."}
+        """
         query = "CALL getTotalsOfDay(CURDATE() - INTERVAL 1 DAY);"
 
         try:
@@ -107,6 +151,15 @@ class HeightController(DatabaseController):
             self.close()
 
     def get_totals_of_day(self, day):
+        """
+        returns the calculated totals of given day
+
+        Args:
+            day (string): the day in the format yyyy-mm-dd
+
+        Returns:
+            string: serialized json either [{height, total_time}] or {"error" : "..."}
+        """
         query = "CALL getTotalsOfDay('{}');"
 
         try:
@@ -127,6 +180,19 @@ class HeightController(DatabaseController):
             self.close()
 
     def validate_latest_entry(self, newHeight) -> bool:
+        """
+        checks if a height can be saved to the db
+
+        Args:
+            newHeight (int): height that should be saved
+
+        Raises:
+            Exception: if height is not valid
+
+
+        Returns:
+            bool: true if height can be saved
+        """
         query = "CALL getLatestHeight()"
 
         try:
@@ -159,11 +225,17 @@ class HeightController(DatabaseController):
 
             return True
         except Exception as e:
-            return False
+            raise Exception(e)
         finally:
             self.close()
 
     def get_current_height(self):
+        """
+        returns the latest height
+
+        Returns:
+            string: serialized json either {"height" : num} or {"error" : "..."}
+        """
         query = "CALL getLatestHeight();"
 
         try:
@@ -171,16 +243,27 @@ class HeightController(DatabaseController):
             height = 0
 
             for id, start_time, start_height, end_time, end_height in cursor:
-                print(start_height)
-                height = start_height
+                if end_height == None:
+                    height = start_height
+                else:
+                    height = end_height
 
-            return json.dumps({"height": start_height})
+            return json.dumps({"height": height})
         except Exception as e:
             return json.dumps({"error": str(e)})
         finally:
             self.close()
 
     def get_daily_totals_of_year(self, year):
+        """
+        returns the total of each day of the given year
+
+        Args:
+            year (int): year in the format yyyy
+
+        Returns:
+            string: serialized json either [{height, total_time}] or {"error" : "..."}
+        """
         query = "CALL getDailyTotalsOfYear({});"
 
         try:
@@ -197,5 +280,6 @@ class HeightController(DatabaseController):
             return json.dumps({"error": str(e)})
         finally:
             self.close()
+
 
 height_controller = HeightController()

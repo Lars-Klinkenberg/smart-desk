@@ -1,7 +1,6 @@
 from bottle import Bottle
 from routes.height_routes import height_server
 from routes.setting_routes import setting_server
-from routes.time_routes import time_server
 from utils.enable_cors import EnableCors, add_cors_headers
 
 mainApp = Bottle()
@@ -30,7 +29,6 @@ def enable_cors_after_request_hook():
 if __name__ == "__main__":
     try:
         mainApp.mount('/height', height_server)
-        mainApp.mount("/time", time_server)
         mainApp.mount("/setting", setting_server)
 
         # executes enable_cors on all routes (https://stackoverflow.com/questions/17262170/bottle-py-enabling-cors-for-jquery-ajax-requests)
