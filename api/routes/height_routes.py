@@ -1,4 +1,4 @@
-from controllers.db_controller import db_controller
+from controllers.height_controller import height_controller
 from bottle import Bottle, abort, response, request, HTTPResponse
 import json
 
@@ -12,7 +12,7 @@ def current_height():
     if height is None:
         return HTTPResponse(status=400, body=json.dumps({"error": "height missing"}))
     try:
-        db_controller.save_height(height)
+        height_controller.save_height(height)
         return json.dumps({"success": "saved height: " + height})
     except Exception as e:
         return HTTPResponse(status=500, body=json.dumps({"error": str(e)}))
@@ -20,7 +20,7 @@ def current_height():
 
 @height_server.route("/current")
 def current_height():
-    return db_controller.get_current_height()
+    return height_controller.get_current_height()
 
 
 @height_server.route("/entrys")
@@ -32,6 +32,6 @@ def get_todays_entrys():
         limit = 15
 
     if day == "all":
-        return db_controller.get_all_heights(limit)
+        return height_controller.get_all_heights(limit)
 
-    return db_controller.get_all_entrys_by_day(day)
+    return height_controller.get_all_entrys_by_day(day)
