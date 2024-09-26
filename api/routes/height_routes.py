@@ -60,7 +60,7 @@ def get_todays_entrys():
 
 
 @height_server.route("/total/day")
-def get_todays_total_time():
+def get_total_time_of_day():
     """
     returns the calculated totals of given day
 
@@ -87,7 +87,7 @@ def get_todays_total_time():
 
 
 @height_server.route("/total/yesterday")
-def get_todays_total_time():
+def get_yesterdays_total_time():
     """
     returns the totals of yesterday
 
@@ -98,10 +98,10 @@ def get_todays_total_time():
 
 
 @height_server.route("/total/year")
-def get_todays_total_time():
+def get_total_times_of_year():
     """
     returns the totals of the given year
-    
+
     Request headers:
     year: the year as an int
 
@@ -109,8 +109,9 @@ def get_todays_total_time():
         string: serialized json either [data] or {"error" : "..."}
     """
     year = request.headers.get("year", None)
-    print(year)
     if year is None:
-        abort(400)
+        return HTTPResponse(
+            status=400, body=json.dumps({"error": "year header missing"})
+        )
 
     return height_controller.get_daily_totals_of_year(year)
