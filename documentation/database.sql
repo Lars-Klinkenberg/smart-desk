@@ -3,7 +3,7 @@ CREATE DATABASE standing_desk;
 
 
 USE standing_desk;
-CREATE USER 'deskController'@'localhost' IDENTIFIED BY 'password';
+CREATE USER IF NOT EXISTS 'deskController'@'localhost' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON standing_desk.* to "deskController"@"localhost";
 
 CREATE TABLE heights(
@@ -28,6 +28,22 @@ CREATE TABLE monthly_avg(
     id_of_month ENUM("1","2","3","4","5","6","7","8","9","10","11","12"),
     year INT
 );
+
+CREATE TABLE settings(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    presetName VARCHAR(50),
+    heatmap_steps FLOAT,
+    daily_goal TIME,
+    standing_height INT,
+    sitting_height INT
+);
+
+-- Insert data into the daily_totals table to set limit at when calculating values of past
+INSERT INTO daily_totals (height, total_time, day) VALUES (0, '00:00:00', '2024-01-01 00:00:00');
+
+-- Insert data into the monthly_avg table to set limit at when calculating values of past
+INSERT INTO monthly_avg (height, total_time, id_of_month, year) VALUES (0, '00:00:00', '1', 2024);
+
 
 DELIMITER //
 
@@ -128,6 +144,13 @@ CREATE PROCEDURE saveMonthlyAvg(
 )
 BEGIN
     INSERT INTO monthly_avg (height, total_time, id_of_month, year) VALUES (height_in, total_time_in, id_of_month_in, year_in);
+END //
+
+CREATE PROCEDURE getDailyTotalsOfYear(
+    IN year INT
+)
+BEGIN
+    SELECT * FROM daily_totals WHERE Year(day) = year;
 END //
 
 DELIMITER ;
