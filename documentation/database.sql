@@ -38,6 +38,8 @@ CREATE TABLE settings(
     sitting_height INT
 );
 
+INSERT INTO heights (start_time, start_height) VALUES (CURRENT_TIMESTAMP(), 74);
+
 -- Insert data into the daily_totals table to set limit at when calculating values of past
 INSERT INTO daily_totals (height, total_time, day) VALUES (0, '00:00:00', '2024-01-01 00:00:00');
 
