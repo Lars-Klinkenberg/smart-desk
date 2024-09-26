@@ -15,8 +15,7 @@ def get_current_height_loop():
     Background thread to update the desk height
     """
 
-    print("Started current height loop")
-    print("To get the latest state of the Desk please press the move up/down button")
+    print("Started loop with current height " + str(desk_state.get_height()))
     while not shutdown_event.is_set():
         try:
             time.sleep(0.5)  # Change height every 10 seconds
@@ -33,6 +32,7 @@ def get_current_height_loop():
 if __name__ == "__main__":
     # TODO: add shutdown signal handling
     try:
+        desk_state.set_height(http_controller.get_current_height())
         get_current_height_loop()
     except Exception as e:
         print(f"Error running loop: {e}") 
