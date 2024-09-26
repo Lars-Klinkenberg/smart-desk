@@ -34,6 +34,9 @@ def add_new_preset():
 def get_preset_by_name():
     """
     returns a profile by the preset_name
+
+    Returns:
+        string: serialized json either [{setting data}] or {"error":"..."}
     """
     preset_name = request.headers.get("preset_name", None)
 
@@ -49,6 +52,9 @@ def get_preset_by_name():
 def update_preset():
     """
     updates an existing preset
+
+    Returns:
+        string: serialized json either {"success": "..."} or {"error":"..."}
     """
     preset_name = request.headers.get("preset_name", None)
     heatmap_steps = request.headers.get("heatmap_steps", None)
@@ -70,6 +76,9 @@ def update_preset():
 def get_profile_list():
     """
     returns a list of available profiles
+
+    Returns:
+        string: serialized json either [{setting data}] or {"error":"..."}
     """
 
     return setting_controller.get_list_of_profiles()
