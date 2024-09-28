@@ -10,6 +10,7 @@ from controllers.http_controller import http_controller
 # Create a shutdown event to signal the background thread to stop
 shutdown_event = Event()
 
+
 def get_current_height_loop():
     """
     Background thread to update the desk height
@@ -25,17 +26,26 @@ def get_current_height_loop():
                 http_controller.save_height(desk_state.get_height())
                 desk_controller.reset_height_has_changed()
                 print("height has ben changed ...")
-        except Exception as e:  
+        except Exception as e:
             print(f"Error in get_current_height_loop: {e}")
 
 
+def shutdown_handler(signum, frame):
+    """
+    Signal handler to gracefully shut down the loop.
+    """
+    print("Received shutdown signal. Stopping the loop...")
+    shutdown_event.set()  # Trigger the event to stop the loop
+
+
 if __name__ == "__main__":
-    # TODO: add shutdown signal handling
+    signal.signal(signal.SIGINT, shutdown_handler)
+    signal.signal(signal.SIGTERM, shutdown_handler)
+
     try:
         desk_state.set_height(http_controller.get_current_height())
         get_current_height_loop()
     except Exception as e:
-        print(f"Error running loop: {e}") 
+        print(f"Error running loop: {e}")
     finally:
-        print("Exiting ...")
-    
+        print("Stopped")
