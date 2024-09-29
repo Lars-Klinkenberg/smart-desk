@@ -92,7 +92,42 @@ CREATE PROCEDURE getTotalsOfDay(
     IN day DATE
 )
 BEGIN
-    SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(end_time, start_time)))) as total_time, start_height as height FROM heights WHERE DATE(start_time) = day GROUP BY height;
+    SELECT 
+        TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(
+            CASE 
+                -- Case 1: The entire period is within the same day
+                WHEN DATE(start_time) = day AND DATE(end_time) = day THEN 
+                    TIMEDIFF(end_time, start_time)
+                
+                -- Case 2: The period starts on the given day but ends on another day
+                WHEN DATE(start_time) = day AND DATE(end_time) > day THEN 
+                    TIMEDIFF(CONCAT(day, ' 23:59:59'), start_time)
+                
+                -- Case 3: The period starts before the given day and ends on the given day
+                WHEN DATE(start_time) < day AND DATE(end_time) = day THEN 
+                    TIMEDIFF(end_time, CONCAT(day, ' 00:00:00'))
+                
+                -- Case 4: The period spans the given day (starts before and ends after the given day)
+                WHEN DATE(start_time) < day AND DATE(end_time) > day THEN 
+                    TIMEDIFF(CONCAT(day, ' 23:59:59'), CONCAT(day, ' 00:00:00'))
+                
+                -- Case 5: The end_time is NULL (ongoing period), so calculate up to the end of the specified day
+                WHEN DATE(start_time) = day AND end_time IS NULL THEN 
+                    TIMEDIFF(CONCAT(day, ' 23:59:59'), start_time)
+                
+                -- Case 6: The start_time is before the given day and the period is ongoing (NULL end_time)
+                WHEN DATE(start_time) < day AND end_time IS NULL THEN 
+                    TIMEDIFF(CONCAT(day, ' 23:59:59'), CONCAT(day, ' 00:00:00'))
+                
+                ELSE '00:00:00'
+            END
+        ))), '%H:%i:%s') as total_time, 
+        start_height as height 
+    FROM heights 
+    WHERE 
+        -- Include rows where the start_time or end_time falls on the given day
+        DATE(start_time) <= day AND (DATE(end_time) >= day OR end_time IS NULL)
+    GROUP BY height;
 END //
 
 -- Get the avg of each height for each Month by id of month and year

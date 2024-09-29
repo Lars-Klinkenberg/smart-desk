@@ -2,6 +2,7 @@ import os
 import mariadb
 from dotenv import load_dotenv
 from datetime import datetime
+import logging
 
 
 class DatabaseController:
@@ -12,6 +13,7 @@ class DatabaseController:
         self.host = os.getenv("DB_HOST")
         self.port = int(os.getenv("DB_PORT", 3306))
         self.database = os.getenv("DB_NAME")
+        self.logger = logging.getLogger(__name__)
 
         if not self.user or not self.password or not self.host or not self.database:
             raise ValueError("Database configuration not found")
@@ -26,7 +28,7 @@ class DatabaseController:
                 database=self.database,
             )
         except Exception as e:
-            print(f"Failed to connect to database {e}")
+            self.logger.error(f"Failed to connect to database {e}")
 
     def close(self):
         if self.conn is not None:
@@ -43,7 +45,9 @@ class DatabaseController:
         save_query = "CALL saveDailyTotal('{}', {}, '{}')"
 
         try:
-            print(f"saving daily total for: {day} at height {height} and time {time} ")
+            self.logger.info(
+                f"saving daily total for: {day} at height {height} and time {time} "
+            )
             self.connect()
             cursor = self.conn.cursor()
             cursor.execute(save_query.format(day, height, time))
@@ -57,7 +61,7 @@ class DatabaseController:
         save_query = "CALL saveMonthlyAvg({}, '{}', {}, {})"
 
         try:
-            print(
+            self.logger.info(
                 f"saving monthly avg for: {id_of_month}.{year} at height {height} and time {time} "
             )
             self.connect()
@@ -75,16 +79,16 @@ class DatabaseController:
 
         try:
             dayFormated = datetime.strptime(day, "%Y-%m-%d").date()
-
             cursor = self.execute_query(query.format(dayFormated))
 
             for total_time, height in cursor:
-                rows.append({"total_time": str(total_time), "height": height})
+                if total_time is not None:
+                    rows.append({"total_time": str(total_time), "height": height})
 
         except ValueError:
-            print("day not in valid format (yyyy-mm-dd)")
+            self.logger.error("day not in valid format (yyyy-mm-dd)")
         except Exception as e:
-            print("error: ", str(e))
+            self.logger.error(f"failed while getting totals_of_day: {str(e)}")
         finally:
             self.close()
             return rows
@@ -100,7 +104,9 @@ class DatabaseController:
                 rows.append({"total_time": str(total_time), "height": height})
 
         except Exception as e:
-            print("error: ", str(e))
+            self.logger.error(
+                f"failed to load daily_totalss_entrys_of_day for day {day}: {str(e)}"
+            )
         finally:
             self.close()
             return rows
@@ -116,7 +122,9 @@ class DatabaseController:
                 rows.append({"total_time": str(total_time), "height": height})
 
         except Exception as e:
-            print("error: ", str(e))
+            self.logger.error(
+                f"failed to load monthly_avg_entrys_of_month for month {id_of_month}, {year}: {str(e)}"
+            )
         finally:
             self.close()
             return rows
@@ -132,7 +140,9 @@ class DatabaseController:
                 rows.append({"avg_time": str(avg_time), "height": height})
 
         except Exception as e:
-            print("error: ", str(e))
+            self.logger.error(
+                f"failed to load month_avgs for month {id_of_month}, {year}: {str(e)}"
+            )
         finally:
             self.close()
             return rows
