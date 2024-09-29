@@ -1,5 +1,3 @@
-# app/utils/height_changer.py
-
 from utils.desk_state import desk_state
 
 

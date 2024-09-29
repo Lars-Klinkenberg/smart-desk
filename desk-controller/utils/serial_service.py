@@ -71,5 +71,4 @@ class SerialService:
         self.ser.close()
 
 
-# Create a global instance of the serial service
 serial_service = SerialService()

@@ -1,5 +1,5 @@
 from controllers.height_controller import height_controller
-from bottle import Bottle, abort, response, request, HTTPResponse
+from bottle import Bottle, request, HTTPResponse
 import json
 
 height_server = Bottle()

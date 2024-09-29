@@ -3,6 +3,7 @@ import mariadb
 from dotenv import load_dotenv
 import logging
 
+
 class DatabaseController:
     def __init__(self) -> None:
         load_dotenv(dotenv_path="../.env")

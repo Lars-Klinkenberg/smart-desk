@@ -2,6 +2,7 @@ from utils.desk_state import desk_state
 from utils.converter_service import converter_service
 from utils.serial_service import serial_service
 
+
 class DeskController:
     """
     Controller class for the desk
@@ -32,16 +33,17 @@ class DeskController:
 
     def height_has_changed(self):
         measurements = desk_state.get_latest_measurements()
-        if(len(measurements) <= 5):
+        if len(measurements) <= 5:
             return False
 
-        if desk_state.get_last_final_height() == measurements[len(measurements) -1]:
+        if desk_state.get_last_final_height() == measurements[len(measurements) - 1]:
             return False
-        
+
         # check if every item in the list is equal
         return all(x == measurements[0] for x in measurements)
 
     def reset_height_has_changed(self):
         desk_state.clear_latest_measurements()
+
 
 desk_controller = DeskController()
