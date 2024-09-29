@@ -46,7 +46,7 @@ if __name__ == "__main__":
         filename="../logs/desk_controller.log",
         encoding="utf-8",
         level=logging.INFO,
-        format="%(asctime)s - %(levelname)s: %(message)s",
+        format="%(asctime)s | %(levelname)s | %(message)s",
     )
     signal.signal(signal.SIGINT, shutdown_handler)
     signal.signal(signal.SIGTERM, shutdown_handler)
