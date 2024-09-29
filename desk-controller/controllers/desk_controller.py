@@ -1,7 +1,6 @@
 from utils.desk_state import desk_state
 from utils.converter_service import converter_service
 from utils.serial_service import serial_service
-from utils.gpio_service import gpio_service
 
 class DeskController:
     """

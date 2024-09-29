@@ -2,12 +2,14 @@ import json
 import requests
 import os
 from dotenv import load_dotenv
+import logging
 
 
 class HttpController:
     def __init__(self) -> None:
         load_dotenv(dotenv_path="../.env")
         self.BASE_URL = os.getenv("API_BASE_URL")
+        self.logger = logging.getLogger(__name__)
 
     def send_request(self, path, type="GET", headers={}, payload={}):
         url = self.BASE_URL + path
@@ -22,7 +24,7 @@ class HttpController:
         try:
             self.send_request(path, "POST", headers)
         except Exception as e:
-            print("ERROR - failed saving height: ", e)
+            self.logger.error("failed to save height: ", e)
 
     def get_current_height(self):
         path = "/height/current"
@@ -33,7 +35,7 @@ class HttpController:
 
             return height
         except Exception as e:
-            print("ERROR - failed to load start height: ", e)
+            self.logger.error("failed to load height: ", e)
             return 0
 
 

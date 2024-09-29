@@ -26,7 +26,10 @@ def get_current_height_loop():
                 desk_controller.reset_height_has_changed()
                 logger.info("height has ben changed ...")
         except Exception as e:
-            logger.error(f"exception while running get_current_height_loop: {e}")
+            if "returned no data (device disconnected or multiple access on port?)" in e:
+                logger.info(e)
+            else: 
+                logger.error(f"exception while running get_current_height_loop: {e}")
 
 
 def shutdown_handler(signum, frame):

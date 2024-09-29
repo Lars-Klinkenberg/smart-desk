@@ -16,6 +16,7 @@ sudo apt install mariadb-server
 echo -e "\e[31m 3/4 Setting up venv ...\e[0m"
 
 cd ..
+mkdir logs
 sudo apt install python3-venv
 python3 -m venv venv
 
