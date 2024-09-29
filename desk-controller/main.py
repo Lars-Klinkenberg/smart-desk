@@ -1,14 +1,12 @@
 import signal
-import sys
-from threading import Thread, Event
+from threading import Event
 import time
+import logging
 from utils.desk_state import desk_state
-from utils.gpio_service import gpio_service
 from controllers.desk_controller import desk_controller
 from controllers.http_controller import http_controller
-import logging
 
-# Create a shutdown event to signal the background thread to stop
+# Create a shutdown event to signal the loop to stop
 shutdown_event = Event()
 
 
@@ -20,7 +18,7 @@ def get_current_height_loop():
 
     while not shutdown_event.is_set():
         try:
-            time.sleep(0.5)  # Change height every 10 seconds
+            time.sleep(0.5)
             desk_controller.measure_desk_height()
 
             if desk_controller.height_has_changed():
