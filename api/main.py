@@ -1,3 +1,4 @@
+import logging
 from bottle import Bottle
 from routes.height_routes import height_server
 from routes.setting_routes import setting_server
@@ -28,6 +29,14 @@ def enable_cors_after_request_hook():
     add_cors_headers()
 
 if __name__ == "__main__":
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(
+        filename="../logs/api.log",
+        encoding="utf-8",
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)s | %(message)s",
+    )
+    
     try:
         mainApp.mount('/height', height_server)
         mainApp.mount("/setting", setting_server)
@@ -37,7 +46,7 @@ if __name__ == "__main__":
         mainApp.install(EnableCors())
         mainApp.run(host="0.0.0.0", port=8080)
     except Exception as e:
-        print(f"Error in main block: {e}") 
+        logger.error(e) 
     finally:
-        print("Exited successfully")
+        logger.info("Exited successfully")
 

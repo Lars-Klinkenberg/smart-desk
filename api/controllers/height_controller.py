@@ -164,7 +164,6 @@ class HeightController(DatabaseController):
 
         try:
             dayFormated = datetime.strptime(day, "%Y-%m-%d").date()
-            print(query.format(dayFormated))
             cursor = self.execute_query(query.format(dayFormated))
             rows = []
 
