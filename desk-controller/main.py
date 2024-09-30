@@ -26,9 +26,17 @@ def get_current_height_loop():
                 desk_controller.reset_height_has_changed()
                 logger.info("height has ben changed ...")
         except Exception as e:
-            if "returned no data (device disconnected or multiple access on port?)" in e:
-                logger.info(e)
-            else: 
+            if (
+                "returned no data (device disconnected or multiple access on port?)"
+                in str(e)
+            ):
+                logger.warning(e)
+            elif(
+                "Could not configure port: (5, 'Input/output error')" in str(e)
+            ):
+                logger.critical("No acces to serial port. shutting down ...")
+                shutdown_event.set()
+            else:
                 logger.error(f"exception while running get_current_height_loop: {e}")
 
 
@@ -52,6 +60,7 @@ if __name__ == "__main__":
     signal.signal(signal.SIGTERM, shutdown_handler)
 
     try:
+        logger.info("starting desk_controller ...")
         desk_state.set_height(http_controller.get_current_height())
         get_current_height_loop()
     except Exception as e:

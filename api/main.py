@@ -40,6 +40,7 @@ if __name__ == "__main__":
     )
 
     try:
+        logger.info("starting api ...")
         mainApp.mount("/height", height_server)
         mainApp.mount("/setting", setting_server)
         mainApp.mount("/monitoring", monitoring_server)
