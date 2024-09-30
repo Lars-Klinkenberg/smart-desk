@@ -4,17 +4,17 @@ After=network.target
 
 [Service]
 # Set the working directory to the API folder
-WorkingDirectory=/home/raspberry/smart-desk/smart-desk/api
+WorkingDirectory=/home/desk/smart-desk/api
 
 # Use the virtual environment to run the API service
-ExecStart=/bin/bash -c 'source /home/raspberry/smart-desk/smart-desk/venv/bin/activate && python main.py'
+ExecStart=/bin/bash -c 'source /home/desk/smart-desk/venv/bin/activate && python main.py'
 
 # Restart on failure
 Restart=on-failure
 
 # Set the user and group that the service will run under
-User=raspberry
-Group=raspberry
+User=desk
+Group=desk
 
 [Install]
 WantedBy=multi-user.target

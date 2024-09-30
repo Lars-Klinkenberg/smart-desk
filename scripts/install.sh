@@ -33,8 +33,8 @@ pip install requests
 
 echo -e "\e[31m 5/7 Linking systemd files ...\e[0m"
 
-sudo ln -s /home/raspberry/smart-desk/smart-desk/systemd/api-controller.service /etc/systemd/system/api-controller.service
-sudo ln -s /home/raspberry/smart-desk/smart-desk/systemd/desk-controller.service /etc/systemd/system/desk-controller.service
+sudo ln -s /home/desk/smart-desk/systemd/api-controller.service /etc/systemd/system/api-controller.service
+sudo ln -s /home/desk/smart-desk/systemd/desk-controller.service /etc/systemd/system/desk-controller.service
 
 echo -e "\e[31m 5/7 Start services on startup ...\e[0m"
 

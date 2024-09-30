@@ -6,24 +6,24 @@ After=network.target
 
 [Service]
 # Set the working directory to the Desk Controller folder
-WorkingDirectory=/home/raspberry/smart-desk/smart-desk/desk-controller
+WorkingDirectory=/home/desk/smart-desk/desk-controller
 
 # Wait for the serial port to be available before starting the service
 ExecStartPre=/bin/bash -c 'while [ ! -e /dev/ttyS0 ]; do sleep 60; done'
 
 # Set permissions for the serial port before starting the service
-ExecStartPre=/bin/bash '/home/raspberry/smart-desk/smart-desk/scripts/grant_serial_port_permission.sh'
+ExecStartPre=/bin/bash '/home/desk/smart-desk/scripts/grant_serial_port_permission.sh'
 
 # Activate the virtual environment and run main.py for the desk-controller
-ExecStart=/bin/bash -c 'source /home/raspberry/smart-desk/smart-desk/venv/bin/activate && python main.py'
+ExecStart=/bin/bash -c 'source /home/desk/smart-desk/venv/bin/activate && python main.py'
 
 # Restart on failure
 Restart=on-failure
 StartLimitInterval=120
 
 # Set the user and group that the service will run under
-User=raspberry
-Group=raspberry
+User=desk
+Group=desk
 
 [Install]
 WantedBy=multi-user.target
