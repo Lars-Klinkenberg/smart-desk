@@ -36,12 +36,12 @@ echo -e "\e[31m 5/7 Linking systemd files ...\e[0m"
 sudo ln -s /home/desk/smart-desk/systemd/api-controller.service /etc/systemd/system/api-controller.service
 sudo ln -s /home/desk/smart-desk/systemd/desk-controller.service /etc/systemd/system/desk-controller.service
 
-echo -e "\e[31m 5/7 Start services on startup ...\e[0m"
+echo -e "\e[31m 6/7 Start services on startup ...\e[0m"
 
 sudo systemctl daemon-reload
 sudo systemctl enable api-controller.service
 sudo systemctl enable desk-controller.service
 
-echo -e "\e[31m 5/7 Starting api-controller and desk-controller service manually ...\e[0m"
+echo -e "\e[31m 7/7 Starting api-controller and desk-controller service manually ...\e[0m"
 sudo systemctl start api-controller.service
 sudo systemctl start desk-controller.service
