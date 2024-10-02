@@ -1,9 +1,31 @@
 import json
+import subprocess
+import logging
 from bottle import Bottle
 
 monitoring_server = Bottle()
 
 
+def is_service_active(service_name):
+    logger = logging.getLogger(__name__)
+
+    try:
+        # Run the systemctl command to check if the service is active
+        result = subprocess.run(
+            ["systemctl", "is-active", service_name],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+
+        # Check the output; 'active' indicates the service is running
+        return result.stdout.strip() == "active"
+
+    except Exception as e:
+        logger.error(f"Failed to load service ({service_name}) status: {e}")
+        return False
+
+    
 def read_logs(path):
     logs = []
     try:
@@ -33,7 +55,17 @@ def get_status():
     Returns:
         string: serialized json [{"service" : "status"}]
     """
-    return json.dumps([{"api": "up"}])
+    desk_controller_service_name = "desk-controller"
+    api_controller_service_name = "api-controller"
+    desk_controller_active = is_service_active(desk_controller_service_name)
+    api_controller_active = is_service_active(api_controller_service_name)
+
+    return json.dumps(
+        {
+            "api-controller": api_controller_active,
+            "desk-controller": desk_controller_active,
+        }
+    )
 
 
 @monitoring_server.route("/logs/api")
