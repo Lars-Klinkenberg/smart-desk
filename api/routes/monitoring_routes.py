@@ -32,7 +32,7 @@ def read_logs(path):
         with open(path, "r") as log_file:
             lines = log_file.readlines()
 
-            for line in lines:
+            for line in lines[::-1]:
                 args = line.split("|")
 
                 if len(args) == 3:
