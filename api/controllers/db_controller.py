@@ -50,7 +50,7 @@ class DatabaseController:
         self.connect()
 
         if not hasattr(self, "conn") or self.conn is None:
-            self.logger.error("Database connection is not established.")
+            self.logger.exception("Database connection is not established.")
             raise ConnectionError("Database connection is not established.")
 
         cursor = self.conn.cursor()

@@ -49,6 +49,6 @@ if __name__ == "__main__":
         mainApp.install(EnableCors())
         mainApp.run(host="0.0.0.0", port=8080)
     except Exception as e:
-        logger.error(e)
+        logger.exception(e)
     finally:
         logger.info("Exited successfully")

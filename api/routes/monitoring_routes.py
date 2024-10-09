@@ -1,4 +1,5 @@
 import json
+import re
 import subprocess
 import logging
 from bottle import Bottle, request
@@ -22,34 +23,46 @@ def is_service_active(service_name):
         return result.stdout.strip() == "active"
 
     except Exception as e:
-        logger.error(f"Failed to load service ({service_name}) status: {e}")
+        logger.exception(f"Failed to load service ({service_name}) status")
         return False
 
 
 def read_logs(path, all_levels=None):
     logger = logging.getLogger(__name__)
+    # regex to check for timestamp at start of line
+    log_pattern = re.compile(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}")
     default_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
     selected_levels = all_levels or default_levels
     logs = []
+    # needed for multiline logs. if a line is part of a multiline log it will be appended to the beginning of the puffer
+    puffer = []
+
     try:
         with open(path, "r") as log_file:
             lines = log_file.readlines()
 
             for line in lines[::-1]:
-                args = line.split("|")
+                # check if line is part of multiline
+                if not log_pattern.match(line):
+                    puffer.insert(0, line)
+                else:
+                    args = line.split("|")
 
-                if len(args) == 3:
-                    time = args[0].strip()
-                    level = args[1].strip()
-                    message = args[2].strip()
+                    if len(args) == 3:
+                        time = args[0].strip()
+                        level = args[1].strip()
+                        message = args[2].strip()
 
-                    if level not in selected_levels:
-                        continue
+                        for p in puffer:
+                            message += " \n " + p.strip()
 
-                    logs.append({"time": time, "level": level, "message": message})
+                        if level not in selected_levels:
+                            continue
+
+                        logs.append({"time": time, "level": level, "message": message})
     except Exception as e:
-        logger.error(f"failed to read logs: {e}")
-    
+        logger.exception(f"failed to read logs")
+
     return logs
 
 

@@ -35,7 +35,7 @@ def get_current_height_loop():
                 logger.critical("No acces to serial port. shutting down ...")
                 shutdown_event.set()
             else:
-                logger.error(f"exception while running get_current_height_loop: {e}")
+                logger.exception(f"exception while running get_current_height_loop")
 
 
 def shutdown_handler(signum, frame):
@@ -62,6 +62,6 @@ if __name__ == "__main__":
         desk_state.set_height(http_controller.get_current_height())
         get_current_height_loop()
     except Exception as e:
-        logger.error(f"Failed running main loop: {e}")
+        logger.exception(f"Failed running main loop")
     finally:
         logger.info("Stopped desk_controller loop")
