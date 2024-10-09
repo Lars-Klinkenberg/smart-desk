@@ -1,7 +1,7 @@
 import json
 import subprocess
 import logging
-from bottle import Bottle
+from bottle import Bottle, request
 
 monitoring_server = Bottle()
 
@@ -25,8 +25,10 @@ def is_service_active(service_name):
         logger.error(f"Failed to load service ({service_name}) status: {e}")
         return False
 
-    
-def read_logs(path):
+
+def read_logs(path, all_levels=None):
+    default_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+    selected_levels = all_levels or default_levels
     logs = []
     try:
         with open(path, "r") as log_file:
@@ -36,13 +38,14 @@ def read_logs(path):
                 args = line.split("|")
 
                 if len(args) == 3:
-                    logs.append(
-                        {
-                            "time": args[0].strip(),
-                            "level": args[1].strip(),
-                            "message": args[2].strip(),
-                        }
-                    )
+                    time = args[0].strip()
+                    level = args[1].strip()
+                    message = args[2].strip()
+
+                    if level not in selected_levels:
+                        continue
+
+                    logs.append({"time": time, "level": level, "message": message})
     finally:
         return logs
 
@@ -76,7 +79,8 @@ def get_controller_logs():
     Returns:
         string: serialized json
     """
-    return json.dumps(read_logs("../logs/api.log"))
+    log_level = request.headers.get("level")
+    return json.dumps(read_logs("../logs/api.log", log_level))
 
 
 @monitoring_server.route("/logs/controller")
@@ -87,7 +91,8 @@ def get_controller_logs():
     Returns:
         string: serialized json
     """
-    return json.dumps(read_logs("../logs/desk_controller.log"))
+    log_level = request.headers.get("level")
+    return json.dumps(read_logs("../logs/desk_controller.log", log_level))
 
 
 @monitoring_server.route("/logs/jobs/daily")
@@ -98,7 +103,8 @@ def get_controller_logs():
     Returns:
         string: serialized json
     """
-    return json.dumps(read_logs("../logs/calculate_daily_activity.log"))
+    log_level = request.headers.get("level")
+    return json.dumps(read_logs("../logs/calculate_daily_activity.log", log_level))
 
 
 @monitoring_server.route("/logs/jobs/monthly")
@@ -109,4 +115,5 @@ def get_controller_logs():
     Returns:
         string: serialized json
     """
-    return json.dumps(read_logs("../logs/calculate_monthly_activity.log"))
+    log_level = request.headers.get("level")
+    return json.dumps(read_logs("../logs/calculate_monthly_activity.log", log_level))

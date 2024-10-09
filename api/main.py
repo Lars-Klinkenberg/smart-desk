@@ -35,7 +35,7 @@ if __name__ == "__main__":
     logging.basicConfig(
         filename="../logs/api.log",
         encoding="utf-8",
-        level=logging.INFO,
+        level=logging.DEBUG,
         format="%(asctime)s | %(levelname)s | %(message)s",
     )
 
