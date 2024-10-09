@@ -224,7 +224,7 @@ class HeightController(DatabaseController):
 
             return True
         except Exception as e:
-            raise Exception(e)
+            raise Exception(e) from e
         finally:
             self.close()
 

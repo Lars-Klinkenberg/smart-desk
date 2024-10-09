@@ -27,6 +27,7 @@ def is_service_active(service_name):
 
 
 def read_logs(path, all_levels=None):
+    logger = logging.getLogger(__name__)
     default_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
     selected_levels = all_levels or default_levels
     logs = []
@@ -46,8 +47,10 @@ def read_logs(path, all_levels=None):
                         continue
 
                     logs.append({"time": time, "level": level, "message": message})
-    finally:
-        return logs
+    except Exception as e:
+        logger.error(f"failed to read logs: {e}")
+    
+    return logs
 
 
 @monitoring_server.route("/status")

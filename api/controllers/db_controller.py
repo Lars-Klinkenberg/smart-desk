@@ -16,7 +16,18 @@ class DatabaseController:
         self.logger = logging.getLogger(__name__)
 
         if not self.user or not self.password or not self.host or not self.database:
-            raise ValueError("Database configuration not found")
+            missing = [
+                var
+                for var, val in [
+                    ("DB_USER", self.user),
+                    ("DB_PASSWORD", self.password),
+                    ("DB_HOST", self.host),
+                    ("DB_NAME", self.database),
+                ]
+                if not val
+            ]
+
+            raise ValueError(f"Missing database configuration: {', '.join(missing)}")
 
     def connect(self):
         try:
@@ -37,6 +48,11 @@ class DatabaseController:
 
     def execute_query(self, query):
         self.connect()
+
+        if not hasattr(self, "conn") or self.conn is None:
+            self.logger.error("Database connection is not established.")
+            raise ConnectionError("Database connection is not established.")
+
         cursor = self.conn.cursor()
         cursor.execute(query)
         return cursor

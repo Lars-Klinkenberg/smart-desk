@@ -31,9 +31,7 @@ def get_current_height_loop():
                 in str(e)
             ):
                 logger.warning(e)
-            elif(
-                "Could not configure port: (5, 'Input/output error')" in str(e)
-            ):
+            elif "Could not configure port: (5, 'Input/output error')" in str(e):
                 logger.critical("No acces to serial port. shutting down ...")
                 shutdown_event.set()
             else:

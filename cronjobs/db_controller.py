@@ -14,9 +14,21 @@ class DatabaseController:
         self.port = int(os.getenv("DB_PORT", 3306))
         self.database = os.getenv("DB_NAME")
         self.logger = logging.getLogger(__name__)
+        self.conn = None
 
         if not self.user or not self.password or not self.host or not self.database:
-            raise ValueError("Database configuration not found")
+            missing = [
+                var
+                for var, val in [
+                    ("DB_USER", self.user),
+                    ("DB_PASSWORD", self.password),
+                    ("DB_HOST", self.host),
+                    ("DB_NAME", self.database),
+                ]
+                if not val
+            ]
+
+            raise ValueError(f"Missing database configuration: {', '.join(missing)}")
 
     def connect(self):
         try:
@@ -37,6 +49,11 @@ class DatabaseController:
 
     def execute_query(self, query):
         self.connect()
+
+        if not hasattr(self, "conn") or self.conn is None:
+            self.logger.error("Database connection is not established.")
+            raise ConnectionError("Database connection is not established.")
+
         cursor = self.conn.cursor()
         cursor.execute(query)
         return cursor
@@ -53,7 +70,7 @@ class DatabaseController:
             cursor.execute(save_query.format(day, height, time))
             self.conn.commit()
         except Exception as e:
-            raise Exception(e)
+            raise Exception(e) from e
         finally:
             self.close()
 
@@ -69,7 +86,7 @@ class DatabaseController:
             cursor.execute(save_query.format(height, time, id_of_month, year))
             self.conn.commit()
         except Exception as e:
-            raise Exception(e)
+            raise Exception(e) from e
         finally:
             self.close()
 
@@ -91,7 +108,8 @@ class DatabaseController:
             self.logger.error(f"failed while getting totals_of_day: {str(e)}")
         finally:
             self.close()
-            return rows
+
+        return rows
 
     def get_daily_totals_entrys_of_day(self, day):
         query = "CALL getDailyTotalsEntrysOfDay('{}')"
@@ -109,7 +127,8 @@ class DatabaseController:
             )
         finally:
             self.close()
-            return rows
+
+        return rows
 
     def get_monthly_avg_entrys_of_month(self, id_of_month, year):
         query = "CALL getMonthlyAvgEntrysOfMonth({}, {})"
@@ -127,7 +146,8 @@ class DatabaseController:
             )
         finally:
             self.close()
-            return rows
+
+        return rows
 
     def get_month_avgs(self, id_of_month, year):
         query = "CALL getMonthAvgs({}, {})"
@@ -145,7 +165,8 @@ class DatabaseController:
             )
         finally:
             self.close()
-            return rows
+
+        return rows
 
 
 db_controller = DatabaseController()
