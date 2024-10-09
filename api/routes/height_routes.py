@@ -35,14 +35,14 @@ def current_height():
     return height_controller.get_current_height()
 
 
-@height_server.route("/entrys")
-def get_todays_entrys():
+@height_server.route("/entries")
+def get_todays_entries():
     """
-    returns all entrys of heights table either by day or all till limit is reached
+    returns all entries of heights table either by day or all till limit is reached
 
     Request headers:
     day : "all" or the day ("yyyy-mm-dd")
-    limit: only if day is set to all. how many entrys should be returned (default: 15)
+    limit: only if day is set to all. how many entries should be returned (default: 15)
 
     Returns:
         string: serialized json either [data] or {"error" : "..."}
@@ -56,7 +56,7 @@ def get_todays_entrys():
     if day == "all":
         return height_controller.get_all_heights(limit)
 
-    return height_controller.get_all_entrys_by_day(day)
+    return height_controller.get_all_entries_by_day(day)
 
 
 @height_server.route("/total/day")

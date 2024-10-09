@@ -71,7 +71,7 @@ BEGIN
 	SELECT * FROM heights ORDER BY id DESC LIMIT 1;
 END //
 
--- Get the latest x entrys of table heights
+-- Get the latest x entries of table heights
 CREATE PROCEDURE getAllHeights(
     IN `lim_val` INT
 )
@@ -79,7 +79,7 @@ BEGIN
 	SELECT * FROM heights ORDER BY id DESC LIMIT lim_val;
 END //
 
--- get all entrys of table height of given day
+-- get all entries of table height of given day
 CREATE PROCEDURE getAllHeightsOfDay(
     IN day DATE
 )
@@ -87,7 +87,7 @@ BEGIN
 	SELECT * FROM heights  WHERE DATE(start_time) = day ORDER BY id DESC;
 END //
 
--- get the total times of all entrys of day in table heights
+-- get the total times of all entries of day in table heights
 CREATE PROCEDURE getTotalsOfDay(
     IN day DATE
 )
@@ -145,8 +145,8 @@ BEGIN
     SELECT height, DAYOFWEEK(day) as id_of_day, SEC_TO_TIME(AVG(TIME_TO_SEC(total_time))) as avg_time FROM daily_totals GROUP BY height, id_of_day ORDER BY id_of_day;
 END //
 
---  get Entrys of daily_totals of given day
-CREATE PROCEDURE getDailyTotalsEntrysOfDay(
+--  get entries of daily_totals of given day
+CREATE PROCEDURE getDailyTotalsEntriesOfDay(
     IN selectedDay DATE
 )
 BEGIN
@@ -163,8 +163,8 @@ BEGIN
     INSERT INTO daily_totals (height, total_time, day) VALUES (height_in, total_time_in, day_in);
 END //
 
---  get Entrys of monthly_avg of given day
-CREATE PROCEDURE getMonthlyAvgEntrysOfMonth(
+--  get entries of monthly_avg of given day
+CREATE PROCEDURE getMonthlyAvgEntriesOfMonth(
     IN month INT,
     IN year_in INT
 )

@@ -39,10 +39,10 @@ class HeightController(DatabaseController):
 
     def get_all_heights(self, limit):
         """
-        get all heights entrys of current day
+        get all heights entries of current day
 
         Args:
-            limit (int): limits how many entrys should be returned
+            limit (int): limits how many entries should be returned
 
         Returns:
             string: serialized json either [{id, start_time, start_height, end_time, end_height}] or {"error" : "..."}
@@ -92,9 +92,9 @@ class HeightController(DatabaseController):
         finally:
             self.close()
 
-    def get_all_entrys_by_day(self, day):
+    def get_all_entries_by_day(self, day):
         """
-        returns the heights entrys of given day
+        returns the heights entries of given day
 
         Args:
             day (string): day in the format yyyy-mm-dd

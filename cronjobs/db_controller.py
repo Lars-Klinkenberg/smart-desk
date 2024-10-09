@@ -111,8 +111,8 @@ class DatabaseController:
 
         return rows
 
-    def get_daily_totals_entrys_of_day(self, day):
-        query = "CALL getDailyTotalsEntrysOfDay('{}')"
+    def get_daily_totals_entries_of_day(self, day):
+        query = "CALL getDailyTotalsEntriesOfDay('{}')"
         rows = []
 
         try:
@@ -123,15 +123,15 @@ class DatabaseController:
 
         except Exception as e:
             self.logger.error(
-                f"failed to load daily_totalss_entrys_of_day for day {day}: {str(e)}"
+                f"failed to load daily_totalss_entries_of_day for day {day}: {str(e)}"
             )
         finally:
             self.close()
 
         return rows
 
-    def get_monthly_avg_entrys_of_month(self, id_of_month, year):
-        query = "CALL getMonthlyAvgEntrysOfMonth({}, {})"
+    def get_monthly_avg_entries_of_month(self, id_of_month, year):
+        query = "CALL getMonthlyAvgEntriesOfMonth({}, {})"
         rows = []
 
         try:
@@ -142,7 +142,7 @@ class DatabaseController:
 
         except Exception as e:
             self.logger.error(
-                f"failed to load monthly_avg_entrys_of_month for month {id_of_month}, {year}: {str(e)}"
+                f"failed to load monthly_avg_entries_of_month for month {id_of_month}, {year}: {str(e)}"
             )
         finally:
             self.close()

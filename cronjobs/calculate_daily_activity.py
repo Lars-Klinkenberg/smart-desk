@@ -7,7 +7,7 @@ import logging
 def check_and_save(day):
     # check if there is already data saved for this day
     logger.info(f"loading daily totals for day: {day}")
-    activity = db_controller.get_daily_totals_entrys_of_day(day)
+    activity = db_controller.get_daily_totals_entries_of_day(day)
 
     if day_was_saved(activity):
         logger.info(f"day {day} was already saved")

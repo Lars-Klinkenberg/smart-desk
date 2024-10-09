@@ -7,7 +7,7 @@ import logging
 def check_and_save(id_of_month, year):
     # check if there is already data saved for this month
     logger.info(f"loading monthly avgs for month: {id_of_month}, {year}")
-    activity = db_controller.get_monthly_avg_entrys_of_month(id_of_month, year)
+    activity = db_controller.get_monthly_avg_entries_of_month(id_of_month, year)
 
     if month_was_saved(activity):
         logger.info(f"month {id_of_month}, {year} was already saved")
