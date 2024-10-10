@@ -22,7 +22,7 @@ def is_service_active(service_name):
         # Check the output; 'active' indicates the service is running
         return result.stdout.strip() == "active"
 
-    except Exception as e:
+    except Exception:
         logger.exception(f"Failed to load service ({service_name}) status")
         return False
 
@@ -60,7 +60,7 @@ def read_logs(path, all_levels=None):
                             continue
 
                         logs.append({"time": time, "level": level, "message": message})
-    except Exception as e:
+    except Exception:
         logger.exception(f"failed to read logs")
 
     return logs

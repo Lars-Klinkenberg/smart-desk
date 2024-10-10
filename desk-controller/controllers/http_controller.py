@@ -30,7 +30,7 @@ class HttpController:
 
         try:
             self.send_request(path, "POST", headers)
-        except Exception as e:
+        except Exception:
             self.logger.exception("failed to save height")
 
     def get_current_height(self):
@@ -48,7 +48,7 @@ class HttpController:
             height = data["height"]
 
             return height
-        except Exception as e:
+        except Exception:
             self.logger.exception("failed to load height")
             return 0
 

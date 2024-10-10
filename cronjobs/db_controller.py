@@ -39,8 +39,8 @@ class DatabaseController:
                 port=self.port,
                 database=self.database,
             )
-        except Exception as e:
-            self.logger.exception(f"Failed to connect to database")
+        except Exception:
+            self.logger.exception("Failed to connect to database")
 
     def close(self):
         if self.conn is not None:
@@ -69,7 +69,7 @@ class DatabaseController:
             cursor = self.conn.cursor()
             cursor.execute(save_query.format(day, height, time))
             self.conn.commit()
-        except Exception as e:
+        except Exception:
             self.logger.exception(f"failed to save daily total for day: {day}")
         finally:
             self.close()
@@ -85,8 +85,10 @@ class DatabaseController:
             cursor = self.conn.cursor()
             cursor.execute(save_query.format(height, time, id_of_month, year))
             self.conn.commit()
-        except Exception as e:
-            self.logger.exception(f"failed to save monthly avg for month: {id_of_month}, {year}")
+        except Exception:
+            self.logger.exception(
+                f"failed to save monthly avg for month: {id_of_month}, {year}"
+            )
         finally:
             self.close()
 
@@ -104,7 +106,7 @@ class DatabaseController:
 
         except ValueError:
             self.logger.exception("day not in valid format (yyyy-mm-dd)")
-        except Exception as e:
+        except Exception:
             self.logger.exception(f"failed while getting totals_of_day")
         finally:
             self.close()
@@ -121,7 +123,7 @@ class DatabaseController:
             for id, height, total_time, day in cursor:
                 rows.append({"total_time": str(total_time), "height": height})
 
-        except Exception as e:
+        except Exception:
             self.logger.exception(
                 f"failed to load daily_totalss_entries_of_day for day {day}"
             )
@@ -140,7 +142,7 @@ class DatabaseController:
             for id, height, total_time, id_of_month, year in cursor:
                 rows.append({"total_time": str(total_time), "height": height})
 
-        except Exception as e:
+        except Exception:
             self.logger.exception(
                 f"failed to load monthly_avg_entries_of_month for month {id_of_month}, {year}"
             )
@@ -159,7 +161,7 @@ class DatabaseController:
             for height, avg_time in cursor:
                 rows.append({"avg_time": str(avg_time), "height": height})
 
-        except Exception as e:
+        except Exception:
             self.logger.exception(
                 f"failed to load month_avgs for month {id_of_month}, {year}"
             )

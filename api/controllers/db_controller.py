@@ -38,8 +38,8 @@ class DatabaseController:
                 port=self.port,
                 database=self.database,
             )
-        except Exception as e:
-            self.loggger.error(f"Failed to connect to database {e}")
+        except Exception:
+            self.loggger.exception("Failed to connect to database")
 
     def close(self):
         if self.conn is not None:
