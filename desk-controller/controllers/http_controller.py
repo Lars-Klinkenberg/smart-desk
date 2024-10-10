@@ -15,14 +15,14 @@ class HttpController:
         url = self.BASE_URL + path
         headers = headers or {}
         payload = payload or {}
-        
+
         try:
             response = requests.request(type, url, headers=headers, data=payload)
             response.raise_for_status()  # Raises an HTTPError for bad responses
             return response.text
         except requests.RequestException as e:
             self.logger.error(f"HTTP request failed: {e}")
-            raise  # Re-raise the exception after logging
+            raise
 
     def save_height(self, height):
         path = "/height/save"
@@ -31,18 +31,25 @@ class HttpController:
         try:
             self.send_request(path, "POST", headers)
         except Exception as e:
-            self.logger.exception("failed to save height: ", e)
+            self.logger.exception("failed to save height")
 
     def get_current_height(self):
         path = "/height/current"
         try:
             json_string = self.send_request(path, "GET")
             data = json.loads(json_string)
+
+            if "height" not in data:
+                self.logger.error(
+                    "'height' key not found in get_current_height response"
+                )
+                return 0
+
             height = data["height"]
 
             return height
         except Exception as e:
-            self.logger.exception("failed to load height: ", e)
+            self.logger.exception("failed to load height")
             return 0
 
 
