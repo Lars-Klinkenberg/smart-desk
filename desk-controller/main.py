@@ -1,120 +1,67 @@
 import signal
-import sys
-from threading import Thread, Event
+from threading import Event
 import time
-from bottle import Bottle
+import logging
 from utils.desk_state import desk_state
-from utils.gpio_service import gpio_service
-from controllers.db_controller import db_controller
 from controllers.desk_controller import desk_controller
-from routes.height_routes import height_server
-from routes.setting_routes import setting_server
-from routes.time_routes import time_server
-from routes.enable_cors import EnableCors, add_cors_headers
-# Create a shutdown event to signal the background thread to stop
+from controllers.http_controller import http_controller
+
+# Create a shutdown event to signal the loop to stop
 shutdown_event = Event()
-mainApp = Bottle()
-
-
-@mainApp.route('/<:re:.*>', method='OPTIONS')
-def enable_cors_generic_route():
-    """
-    This route takes priority over all others. So any request with an OPTIONS
-    method will be handled by this function.
-
-    See: https://github.com/bottlepy/bottle/issues/402
-
-    NOTE: This means we won't 404 any invalid path that is an OPTIONS request.
-    """
-    add_cors_headers()
-
-@mainApp.hook('after_request')
-def enable_cors_after_request_hook():
-    """
-    This executes after every route. We use it to attach CORS headers when
-    applicable.
-    """
-    add_cors_headers()
-
-
-def exit():
-    """
-    Clean up and exit the application
-    """
-    gpio_service.close()
-    print("Exited successfully")
-    pass
 
 
 def get_current_height_loop():
     """
     Background thread to update the desk height
     """
+    logger.info("Started loop with current height " + str(desk_state.get_height()))
 
-    print("Started current height loop")
-    print("To get the latest state of the Desk please press the move up/down button")
     while not shutdown_event.is_set():
         try:
-            time.sleep(0.5)  # Change height every 10 seconds
+            time.sleep(0.5)
             desk_controller.measure_desk_height()
 
             if desk_controller.height_has_changed():
-                db_controller.save_height(desk_state.get_height())
+                http_controller.save_height(desk_state.get_height())
                 desk_controller.reset_height_has_changed()
-                print("height has ben changed ...")
-        except Exception as e:  
-            print(f"Error in get_current_height_loop: {e}")
-
-
-def change_desk_height_loop():
-    """
-    Background thread to change the desk height
-    """
-    print("Started change height loop")
-    while not shutdown_event.is_set():
-        try:
-            time.sleep(5)
-            if desk_state.should_desk_be_moved():
-                print("moving desk ...")
-                desk_controller.move(desk_state.get_moving_direction())
+                logger.info("height has ben changed ...")
         except Exception as e:
-            print(f"Error in change_desk_height_loop: {e}")
+            if (
+                "returned no data (device disconnected or multiple access on port?)"
+                in str(e)
+            ):
+                logger.warning(e)
+            elif "Could not configure port: (5, 'Input/output error')" in str(e):
+                logger.critical("No acces to serial port. shutting down ...")
+                shutdown_event.set()
+            else:
+                logger.exception("exception while running get_current_height_loop")
 
 
-def signal_handler(sig, frame):
+def shutdown_handler(signum, frame):
     """
-    Signal handler for graceful shutdown
+    Signal handler to gracefully shut down the loop.
     """
-    print("Exiting ....")
-    shutdown_event.set()  # Signal the background thread to stop
-    sys.exit(0)
+    logger.info("Received shutdown signal. Stopping the loop...")
+    shutdown_event.set()  # Trigger the event to stop the loop
 
 
 if __name__ == "__main__":
-    # Register signal handler for graceful shutdown
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(
+        filename="../logs/desk_controller.log",
+        encoding="utf-8",
+        level=logging.DEBUG,
+        format="%(asctime)s | %(levelname)s | %(message)s",
+    )
+    signal.signal(signal.SIGINT, shutdown_handler)
+    signal.signal(signal.SIGTERM, shutdown_handler)
 
-    # Start the background thread
-    height_thread = Thread(target=get_current_height_loop)
-    height_thread.start()
-
-    change_thread = Thread(target=change_desk_height_loop)
-    change_thread.start()
-
-    # Run the Flask app
     try:
-        mainApp.mount('/height', height_server)
-        mainApp.mount("/time", time_server)
-        mainApp.mount("/setting", setting_server)
-
-        # executes enable_cors on all routes (https://stackoverflow.com/questions/17262170/bottle-py-enabling-cors-for-jquery-ajax-requests)
-        mainApp.install(EnableCors())
-        mainApp.run(host="0.0.0.0", port=8080)
-    except Exception as e:
-        print(f"Error in main block: {e}") 
+        logger.info("starting desk_controller ...")
+        desk_state.set_height(http_controller.get_current_height())
+        get_current_height_loop()
+    except Exception:
+        logger.exception("Failed running main loop")
     finally:
-        shutdown_event.set()  # Signal the background thread to stop
-        height_thread.join()  # Wait for the background thread to finish
-        change_thread.join()
-        exit()
+        logger.info("Stopped desk_controller loop")

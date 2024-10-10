@@ -65,10 +65,31 @@ pip install mariadb
 
 ## Running the Project
 ### Installation
-to install all dependencies run
+Creating linux user
+```bash
+sudo useradd -s /bin/bash -m -c "desk" -Gsambashare desk
+```
+set user pw
+```bash
+sudo passwd desk
+```
+add user to sudo group
+```bash
+sudo usermod -aG sudo <username>
+```
+
+to install all project specific ressources
 ```bash
 bash install.sh
 ```
+
+#### Configure DB
+start the mariadb cli with
+`sudo mysql -u root -q`
+and execute
+`source path/documentation/database.sql`
+to load the db configuration
+
 
 ### Starting
 to start the project simply run 
