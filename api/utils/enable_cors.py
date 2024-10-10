@@ -26,6 +26,6 @@ def add_cors_headers():
     bottle.response.headers["Access-Control-Allow-Origin"] = "*"
     bottle.response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, OPTIONS"
     bottle.response.headers["Access-Control-Allow-Headers"] = (
-        "Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token"
+        "Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token, *"
     )
     bottle.response.headers["Content-type"] = "application/json"

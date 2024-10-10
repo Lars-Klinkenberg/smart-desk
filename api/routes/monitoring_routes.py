@@ -3,6 +3,7 @@ import re
 import subprocess
 import logging
 from bottle import Bottle, request
+from utils.enable_cors import add_cors_headers
 
 monitoring_server = Bottle()
 
@@ -65,6 +66,17 @@ def read_logs(path, all_levels=None):
 
     return logs
 
+@monitoring_server.route("/<:re:.*>", method="OPTIONS")
+def enable_cors_generic_route():
+    """
+    This route takes priority over all others. So any request with an OPTIONS
+    method will be handled by this function.
+
+    See: https://github.com/bottlepy/bottle/issues/402
+
+    NOTE: This means we won't 404 any invalid path that is an OPTIONS request.
+    """
+    add_cors_headers()
 
 @monitoring_server.route("/status")
 def get_status():

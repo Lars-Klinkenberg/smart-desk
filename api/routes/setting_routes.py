@@ -1,8 +1,22 @@
 import json
 from bottle import Bottle, HTTPResponse, request
+from utils.enable_cors import add_cors_headers
 from controllers.setting_controller import setting_controller
 
 setting_server = Bottle()
+
+
+@setting_server.route("/<:re:.*>", method="OPTIONS")
+def enable_cors_generic_route():
+    """
+    This route takes priority over all others. So any request with an OPTIONS
+    method will be handled by this function.
+
+    See: https://github.com/bottlepy/bottle/issues/402
+
+    NOTE: This means we won't 404 any invalid path that is an OPTIONS request.
+    """
+    add_cors_headers()
 
 
 @setting_server.post("/profile")
