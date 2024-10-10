@@ -105,8 +105,8 @@ class HeightController(DatabaseController):
         query = "CALL getAllHeightsOfDay('{}');"
 
         try:
-            dayFormated = datetime.strptime(day, "%Y-%m-%d").date()
-            cursor = self.execute_query(query.format(dayFormated))
+            day_formated = datetime.strptime(day, "%Y-%m-%d").date()
+            cursor = self.execute_query(query.format(day_formated))
             rows = []
 
             for id, start_time, start_height, end_time, end_height in cursor:
@@ -163,8 +163,8 @@ class HeightController(DatabaseController):
         query = "CALL getTotalsOfDay('{}');"
 
         try:
-            dayFormated = datetime.strptime(day, "%Y-%m-%d").date()
-            cursor = self.execute_query(query.format(dayFormated))
+            day_formated = datetime.strptime(day, "%Y-%m-%d").date()
+            cursor = self.execute_query(query.format(day_formated))
             rows = []
 
             for total_time, height in cursor:

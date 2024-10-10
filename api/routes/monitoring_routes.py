@@ -88,7 +88,7 @@ def get_status():
 
 
 @monitoring_server.route("/logs/api")
-def get_controller_logs():
+def get_api_logs():
     """
     returns the logs of the api
 
@@ -112,7 +112,7 @@ def get_controller_logs():
 
 
 @monitoring_server.route("/logs/jobs/daily")
-def get_controller_logs():
+def get_daily_job_logs():
     """
     returns the logs of the daily job
 
@@ -124,7 +124,7 @@ def get_controller_logs():
 
 
 @monitoring_server.route("/logs/jobs/monthly")
-def get_controller_logs():
+def get_monthly_job_logs():
     """
     returns the logs of the monthly job
 

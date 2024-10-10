@@ -97,8 +97,8 @@ class DatabaseController:
         rows = []
 
         try:
-            dayFormated = datetime.strptime(day, "%Y-%m-%d").date()
-            cursor = self.execute_query(query.format(dayFormated))
+            day_formated = datetime.strptime(day, "%Y-%m-%d").date()
+            cursor = self.execute_query(query.format(day_formated))
 
             for total_time, height in cursor:
                 if total_time is not None:
