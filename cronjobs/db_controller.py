@@ -41,6 +41,7 @@ class DatabaseController:
             )
         except Exception:
             self.logger.exception("Failed to connect to database")
+            self.conn = None
 
     def close(self):
         if self.conn is not None:
