@@ -24,10 +24,7 @@ def check_and_save(id_of_month, year):
 
 
 def month_was_saved(activity):
-    if len(activity) > 0:
-        return True
-
-    return False
+    return len(activity) > 0
 
 
 def save_month(id_of_month, year):
@@ -54,16 +51,19 @@ if __name__ == "__main__":
         level=logging.DEBUG,
         format="%(asctime)s | %(levelname)s | %(message)s",
     )
+    
+    try:
+        id_of_month = datetime.today().month
+        year = datetime.today().year
 
-    id_of_month = datetime.today().month
-    year = datetime.today().year
+        # always start a month behind so every entry is already saved in the db bevore calculating the totals
+        if id_of_month == 1:
+            id_of_month = 12
+            year -= 1
+        else:
+            id_of_month -= 1
 
-    # always start a month behind so every entry is already saved in the db bevore calculating the totals
-    if id_of_month == 1:
-        id_of_month = 12
-        year -= 1
-    else:
-        id_of_month -= 1
-
-    logger.info(f"running calculate_daily_activity for {id_of_month}, {year}")
-    check_and_save(id_of_month, year)
+        logger.info(f"running calculate_monthly_activity for {id_of_month}, {year}")
+        check_and_save(id_of_month, year)
+    except Exception:
+        logger.exception("An error occurred during caluculate_monthly_activity")

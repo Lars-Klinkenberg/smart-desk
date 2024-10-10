@@ -70,7 +70,7 @@ class DatabaseController:
             cursor.execute(save_query.format(day, height, time))
             self.conn.commit()
         except Exception as e:
-            raise Exception(e) from e
+            self.logger.exception(f"failed to save daily total for day: {day}")
         finally:
             self.close()
 
@@ -86,7 +86,7 @@ class DatabaseController:
             cursor.execute(save_query.format(height, time, id_of_month, year))
             self.conn.commit()
         except Exception as e:
-            raise Exception(e) from e
+            self.logger.exception(f"failed to save monthly avg for month: {id_of_month}, {year}")
         finally:
             self.close()
 

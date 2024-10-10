@@ -18,10 +18,7 @@ def check_and_save(day):
 
 
 def day_was_saved(activity):
-    if len(activity) > 0:
-        return True
-
-    return False
+    return len(activity) > 0
 
 
 def save_day(day):
@@ -49,7 +46,9 @@ if __name__ == "__main__":
         format="%(asctime)s | %(levelname)s | %(message)s",
     )
 
-    today = datetime.today().date()
-    logger.info(f"running calculate_daily_activity for {today - timedelta(days=1)}")
-    # always start a day behind today so every entry is already saved in the db bevore calculating the totals
-    check_and_save(today - timedelta(days=1))
+    try:
+        today = datetime.today().date()
+        logger.info(f"running calculate_daily_activity for {today - timedelta(days=1)}")
+        check_and_save(today - timedelta(days=1))
+    except Exception:
+        logger.exception("An error occurred during calculate_daily_activity")
