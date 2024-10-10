@@ -1,7 +1,5 @@
 # !/bin/bash
 
-echo "starting monthly job ..."
-
 # Get the directory where the script is located
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
@@ -14,6 +12,4 @@ source venv/bin/activate
 
 cd cronjobs
 
-
-echo "config successfull. running script"
 python calculate_monthly_activity.py

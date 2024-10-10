@@ -1,6 +1,3 @@
-# app/utils/state.py
-
-
 class DeskState:
     def __init__(self):
         self.height = 0  # Initial height of the desk
@@ -15,7 +12,6 @@ class DeskState:
         if height <= 0:
             return
 
-        # TODO : replace with get current height
         # after init last height is 0
         if self.last_final_height == 0:
             self.last_final_height = height
@@ -40,5 +36,4 @@ class DeskState:
         return self.last_final_height
 
 
-# Create a global instance of the desk state
 desk_state = DeskState()
