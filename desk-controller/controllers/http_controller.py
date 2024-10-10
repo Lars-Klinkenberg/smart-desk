@@ -11,11 +11,18 @@ class HttpController:
         self.BASE_URL = os.getenv("API_BASE_URL")
         self.logger = logging.getLogger(__name__)
 
-    def send_request(self, path, type="GET", headers={}, payload={}):
+    def send_request(self, path, type="GET", headers=None, payload=None):
         url = self.BASE_URL + path
-        response = requests.request(type, url, headers=headers, data=payload)
-
-        return response.text
+        headers = headers or {}
+        payload = payload or {}
+        
+        try:
+            response = requests.request(type, url, headers=headers, data=payload)
+            response.raise_for_status()  # Raises an HTTPError for bad responses
+            return response.text
+        except requests.RequestException as e:
+            self.logger.error(f"HTTP request failed: {e}")
+            raise  # Re-raise the exception after logging
 
     def save_height(self, height):
         path = "/height/save"
