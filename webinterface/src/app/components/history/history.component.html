@@ -1,19 +1,18 @@
 <h3 class="title">See all current logs</h3>
 <hr class="divider" />
-<div class="entry-container">
-  <div class="entry header">
-    <span class="height">height</span>
-    <span class="time">timestamp</span>
-  </div>
-</div>
-<div class="logs">
-  <div
-    class="entry-container"
-    *ngFor="let entry of completeHistory | async; let i = index"
-  >
-    <div class="entry" *ngIf="i < MAX_LOG_COUNT">
-      <span class="height">{{ entry.height }}</span>
-      <span class="time">{{ entry.time }}</span>
-    </div>
-  </div>
-</div>
+<table>
+  <thead>
+    <th>start_time</th>
+    <th>start_height</th>
+    <th>end_time</th>
+    <th>end_height</th>
+  </thead>
+  <tbody >
+    <tr *ngFor="let entry of completeHistory | async; let i = index" class="log-entry">
+      <td class="time">{{ entry.start_time }}</td>
+      <td class="height">{{ entry.start_height }}</td>
+      <td class="time">{{ entry.end_time }}</td>
+      <td class="height">{{ entry.end_height }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -13,7 +13,7 @@ export class BarChartComponent {
   data = [333, 32, 105, 405, 163, 444, 192];
   GOAL = 100;
 
-  constructor(private timeService: TimeService) {}
+  constructor(private readonly timeService: TimeService) {}
 
   getBarHeight(data: number) {
     return ((data / this.GOAL) * 80).toString() + '%';

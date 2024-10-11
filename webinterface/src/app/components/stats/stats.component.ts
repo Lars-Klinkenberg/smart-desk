@@ -13,7 +13,7 @@ export class StatsComponent implements AfterViewInit {
   dailyGoal = '--:--:--';
   weeklyAvg = '--:--:--';
 
-  constructor(private timeService: TimeService) {}
+  constructor(private readonly timeService: TimeService) {}
 
   ngAfterViewInit(): void {
     this.timeService.getTodaysStandingTime().subscribe((data) => {
@@ -21,9 +21,7 @@ export class StatsComponent implements AfterViewInit {
         if (!activity.height) return;
 
         if (activity.height == 115) {
-          this.todaysStandingTime = this.timeService.formatMinutesToTimeString(
-            Number(activity.total_time)
-          );
+          this.todaysStandingTime = activity.total_time;
         }
       });
     });

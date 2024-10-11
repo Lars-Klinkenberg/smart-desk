@@ -11,7 +11,7 @@ import { TimeService } from '../../services/time.service';
 export class PreviousDayStatsComponent implements AfterViewInit {
   standingTime = '--:--:--';
 
-  constructor(private timeService: TimeService) {}
+  constructor(private readonly timeService: TimeService) {}
 
   ngAfterViewInit(): void {
     this.timeService.getYesterdaysStandingTime().subscribe((data) => {

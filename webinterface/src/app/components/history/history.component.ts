@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HeightService } from '../../services/height.service';
 import { Observable } from 'rxjs';
-import { Entry } from '../../models/Entry';
 import { AsyncPipe, CommonModule } from '@angular/common';
+import { Height } from '../../models/Height';
 
 @Component({
   selector: 'history',
@@ -13,9 +13,9 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 })
 export class HistoryComponent implements OnInit {
   MAX_LOG_COUNT = 20;
-  completeHistory!: Observable<Entry[]>;
+  completeHistory!: Observable<Height[]>;
 
-  constructor(private heigtService: HeightService) {}
+  constructor(private readonly heigtService: HeightService) {}
 
   ngOnInit(): void {
     this.completeHistory = this.heigtService.getAllHeights();

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TimeHeatmapComponent } from './components/time-heatmap/time-heatmap.component';
-import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { HistoryComponent } from './components/history/history.component';
 import { StatsComponent } from './components/stats/stats.component';
 import { PreviousDayStatsComponent } from './components/previous-day-stats/previous-day-stats.component';
@@ -15,7 +14,6 @@ import { BarChartComponent } from "./components/bar-chart/bar-chart.component";
     CommonModule,
     RouterOutlet,
     TimeHeatmapComponent,
-    PieChartComponent,
     HistoryComponent,
     StatsComponent,
     PreviousDayStatsComponent,

@@ -44,7 +44,7 @@ export class TimeHeatmapComponent implements OnInit {
   year: Date[] = [];
   heightData = new Map<string, number>();
 
-  constructor(private timeService: TimeService) {}
+  constructor(private readonly timeService: TimeService) {}
 
   ngOnInit(): void {
     let currentYear = new Date().getFullYear();
@@ -143,12 +143,16 @@ export class TimeHeatmapComponent implements OnInit {
           return new Date(activity.day).toDateString() == day.toDateString();
         });
 
-        this.heightData.set(
-          day.toLocaleDateString(),
-          hasDataValues[0]
-            ? this.timeService.getHoursOfActivity(hasDataValues[0])
-            : 0
-        );
+        if (hasDataValues.length == 0) return;
+        let standing_height_data = hasDataValues.find((value) => {
+          return value.height == 115;
+        });
+
+        let time = standing_height_data
+          ? this.timeService.getHoursOfActivity(standing_height_data)
+          : 0;
+
+        this.heightData.set(day.toLocaleDateString(), time);
       });
     });
   }

@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Entry } from '../models/Entry';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { Height } from '../models/Height';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HeightService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
-  getAllHeights(): Observable<Entry[]> {
-    return this.http.get<Entry[]>(environment.BASE_URL + '/height/entrys/all', {
+  getAllHeights(): Observable<Height[]> {
+    let headers = new HttpHeaders();
+    headers = headers.set('day', 'all');
+
+    return this.http.get<Height[]>(environment.BASE_URL + '/height/entries', {
       responseType: 'json',
+      headers: headers,
     });
   }
 }
-

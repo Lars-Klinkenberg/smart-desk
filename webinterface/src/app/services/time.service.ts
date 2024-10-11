@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -11,18 +11,19 @@ export class TimeService {
   constructor(private http: HttpClient) {}
 
   getDailyActivity(): Observable<DailyActivity[]> {
-    return this.http.get<DailyActivity[]>(
-      environment.BASE_URL + '/time/activity/115'
-    );
+    const baseHeaders = new HttpHeaders().set('year', '2024');
+    return this.http.get<DailyActivity[]>(environment.BASE_URL + '/height/total/year', {
+      headers: baseHeaders.set('year', '2024'),
+    });
   }
 
   getTodaysStandingTime(): Observable<DailyActivity[]> {
-    return this.http.get<DailyActivity[]>(environment.BASE_URL + '/time/today');
+    return this.http.get<DailyActivity[]>(environment.BASE_URL + '/height/total/today');
   }
 
   getYesterdaysStandingTime(): Observable<DailyActivity[]> {
     return this.http.get<DailyActivity[]>(
-      environment.BASE_URL + '/time/yesterday'
+      environment.BASE_URL + '/height/total/yesterday'
     );
   }
   /**
