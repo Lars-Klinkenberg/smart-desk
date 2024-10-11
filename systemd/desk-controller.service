@@ -1,25 +1,28 @@
 [Unit]
 Description=Desk Controller Service for Smart Desk
-Requires=api-controller.service
-After=api-controller.service
-After=network.target
+After=network.target dev-ttyS0.device api-controller.service
+Requires=dev-ttyS0.device api-controller.service
 
 [Service]
 # Set the working directory to the Desk Controller folder
 WorkingDirectory=/home/desk/smart-desk/desk-controller
 
 # Wait for the serial port to be available before starting the service
-ExecStartPre=/bin/bash -c 'while [ ! -e /dev/ttyS0 ]; do sleep 60; done'
+ExecStartPre=/bin/bash -c 'for i in {1..300}; do [ -e /dev/ttyS0 ] && break || sleep 1; done'
 
 # Set permissions for the serial port before starting the service
-ExecStartPre=/bin/bash '/home/desk/smart-desk/scripts/grant_serial_port_permission.sh'
+PermissionsStartOnly=true
+ExecStartPre=/usr/bin/chmod 777 /dev/ttyS0
 
 # Activate the virtual environment and run main.py for the desk-controller
 ExecStart=/bin/bash -c 'source /home/desk/smart-desk/venv/bin/activate && python main.py'
 
-# Restart on failure
-Restart=on-failure
+Restart=always
+# wait 30s between restarts
+RestartSec=20
+
 StartLimitInterval=120
+StartLimitBurst=10
 
 # Set the user and group that the service will run under
 User=desk

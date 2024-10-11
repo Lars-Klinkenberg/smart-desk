@@ -77,6 +77,10 @@ add user to sudo group
 ```bash
 sudo usermod -aG sudo <username>
 ```
+add user to dialout group
+```bash
+sudo usermod -aG dialout desk
+```
 
 to install all project specific ressources
 ```bash
