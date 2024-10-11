@@ -187,7 +187,7 @@ CREATE PROCEDURE getDailyTotalsOfYear(
     IN year INT
 )
 BEGIN
-    SELECT * FROM daily_totals WHERE Year(day) = year;
+    SELECT * FROM daily_totals WHERE Year(day) = year GROUP BY day, height;
 END //
 
 DELIMITER ;
