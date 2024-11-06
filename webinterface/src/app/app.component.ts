@@ -5,7 +5,10 @@ import { TimeHeatmapComponent } from './components/time-heatmap/time-heatmap.com
 import { HistoryComponent } from './components/history/history.component';
 import { StatsComponent } from './components/stats/stats.component';
 import { PreviousDayStatsComponent } from './components/previous-day-stats/previous-day-stats.component';
-import { BarChartComponent } from "./components/bar-chart/bar-chart.component";
+import { BarChartComponent } from './components/bar-chart/bar-chart.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { Setting } from './models/Setting';
+import { SettingService } from './services/setting.service';
 
 @Component({
   selector: 'app-root',
@@ -17,12 +20,24 @@ import { BarChartComponent } from "./components/bar-chart/bar-chart.component";
     HistoryComponent,
     StatsComponent,
     PreviousDayStatsComponent,
-    BarChartComponent
-],
+    BarChartComponent,
+    ProfileComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   title = 'webinterface';
   pieChartData = [30, 50];
+  settingList: Setting[] = [];
+
+  constructor(private readonly settingService: SettingService) {
+    this.settingService.loadProfileList().subscribe({
+      next: (settings) => {
+        if (!settings) return;
+
+        this.settingList = settings;
+      },
+    });
+  }
 }

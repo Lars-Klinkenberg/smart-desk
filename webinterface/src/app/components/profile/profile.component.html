@@ -1,0 +1,18 @@
+<div class="profile-container">
+  <div class="side-image">
+    <img src="https://picsum.photos/200" alt="" />
+  </div>
+  <div class="name-container">
+    <div class="select">
+      <mat-form-field>
+        <mat-select [(value)]="selectedProfile">
+          @for (profile of availableProfiles; track profile) {
+          <mat-option [value]="profile.presetName">{{
+            profile.presetName
+          }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
