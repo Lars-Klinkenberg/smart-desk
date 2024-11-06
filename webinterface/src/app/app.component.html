@@ -27,7 +27,7 @@
     </div>
   </div>
   <div class="side">
-    <app-profile [profiles]="settingList"></app-profile>
+    <app-profile (selectionChange)="settingChangeSelectionChange($event)"></app-profile>
     <div class="spacer"></div>
     <app-stats></app-stats>
   </div>

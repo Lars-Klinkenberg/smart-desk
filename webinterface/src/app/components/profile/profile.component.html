@@ -5,7 +5,7 @@
   <div class="name-container">
     <div class="select">
       <mat-form-field>
-        <mat-select [(value)]="selectedProfile">
+        <mat-select [(value)]="selectedProfile" (selectionChange)="detectSelectChanges($event)">
           @for (profile of availableProfiles; track profile) {
           <mat-option [value]="profile.presetName">{{
             profile.presetName

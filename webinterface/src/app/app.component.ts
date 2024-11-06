@@ -8,7 +8,6 @@ import { PreviousDayStatsComponent } from './components/previous-day-stats/previ
 import { BarChartComponent } from './components/bar-chart/bar-chart.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { Setting } from './models/Setting';
-import { SettingService } from './services/setting.service';
 
 @Component({
   selector: 'app-root',
@@ -29,15 +28,9 @@ import { SettingService } from './services/setting.service';
 export class AppComponent {
   title = 'webinterface';
   pieChartData = [30, 50];
-  settingList: Setting[] = [];
+  currentProfile: Setting | undefined;
 
-  constructor(private readonly settingService: SettingService) {
-    this.settingService.loadProfileList().subscribe({
-      next: (settings) => {
-        if (!settings) return;
-
-        this.settingList = settings;
-      },
-    });
+  settingChangeSelectionChange(e: Setting) {
+    this.currentProfile = e;
   }
 }
