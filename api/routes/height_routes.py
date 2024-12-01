@@ -2,6 +2,7 @@ from utils.enable_cors import add_cors_headers
 from controllers.height_controller import height_controller
 from bottle import Bottle, request, HTTPResponse
 import json
+import logging
 
 height_server = Bottle()
 
@@ -20,21 +21,26 @@ def enable_cors_generic_route():
 
 
 @height_server.post("/save")
-def current_height():
+def save_height():
     """
     calls db controller to save the height defined in the request header "height"
 
     Returns:
         string: serialized json either {"success": "..."} or {"error":"..."}
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/height/save'.")
+
     height = request.headers.get("height")
 
     if height is None:
+        logger.error("header height is not defined")
         return HTTPResponse(status=400, body=json.dumps({"error": "height missing"}))
     try:
         height_controller.save_height(height)
         return json.dumps({"success": "saved height: " + height})
     except Exception as e:
+        logger.exception("failed to save height")
         return HTTPResponse(status=500, body=json.dumps({"error": str(e)}))
 
 
@@ -46,6 +52,9 @@ def current_height():
     Returns:
         string: serialized json either {"height": num} or {"error": "..."}
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/height/current'.")
+    
     return height_controller.get_current_height()
 
 
@@ -61,6 +70,9 @@ def get_todays_entries():
     Returns:
         string: serialized json either [data] or {"error" : "..."}
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/height/entries'.")
+    
     day = request.headers.get("day")
     limit = request.headers.get("limit")
 
@@ -84,6 +96,9 @@ def get_total_time_of_day():
     Returns:
         string: serialized json either [data] or {"error" : "..."}
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/height/total/day'.")
+    
     day = request.headers.get("day")
 
     return height_controller.get_totals_of_day(day)
@@ -97,6 +112,9 @@ def get_todays_total_time():
     Returns:
         string: serialized json either [data] or {"error" : "..."}
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/height/total/today'.")
+    
     return height_controller.get_todays_total()
 
 
@@ -108,6 +126,9 @@ def get_yesterdays_total_time():
     Returns:
         string: serialized json either [data] or {"error" : "..."}
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/height/total/yesterday'.")
+
     return height_controller.get_yesterdays_total()
 
 
@@ -122,8 +143,13 @@ def get_total_times_of_year():
     Returns:
         string: serialized json either [data] or {"error" : "..."}
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/height/total/year'.")
+    
     year = request.headers.get("year", None)
     if year is None:
+        logger.error("header year is not defined")
+        
         return HTTPResponse(
             status=400, body=json.dumps({"error": "year header missing"})
         )

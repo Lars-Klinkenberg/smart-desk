@@ -1,4 +1,5 @@
 import json
+import logging
 from bottle import Bottle, HTTPResponse, request
 from utils.enable_cors import add_cors_headers
 from controllers.setting_controller import setting_controller
@@ -24,6 +25,9 @@ def add_new_preset():
     """
     adds a new profile to the db
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/setting/profile'.")
+
     preset_name = request.headers.get("preset_name", None)
     heatmap_steps = request.headers.get("heatmap_steps", 60)
     daily_goal = request.headers.get("daily_goal", 120)
@@ -31,6 +35,7 @@ def add_new_preset():
     sitting_height = request.headers.get("sitting_height", 74)
 
     if preset_name is None:
+        logger.error("header preset_name is not defined")
         return HTTPResponse(
             status=400, body=json.dumps({"error": "header preset_name is not defined"})
         )
@@ -52,9 +57,13 @@ def get_preset_by_name():
     Returns:
         string: serialized json either [{setting data}] or {"error":"..."}
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/setting/profile'.")
+
     preset_name = request.headers.get("preset_name", None)
 
     if preset_name is None:
+        logger.error("header preset_name is not defined")
         return HTTPResponse(
             status=400, body=json.dumps({"error": "header preset_name is not defined"})
         )
@@ -70,6 +79,9 @@ def update_preset():
     Returns:
         string: serialized json either {"success": "..."} or {"error":"..."}
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/setting/profile'.")
+
     preset_name = request.headers.get("preset_name", None)
     heatmap_steps = request.headers.get("heatmap_steps", None)
     daily_goal = request.headers.get("daily_goal", None)
@@ -77,6 +89,7 @@ def update_preset():
     sitting_height = request.headers.get("sitting_height", None)
 
     if preset_name is None:
+        logger.error("header preset_name is not defined")
         return HTTPResponse(
             status=400, body=json.dumps({"error": "header preset_name is not defined"})
         )
@@ -94,5 +107,7 @@ def get_profile_list():
     Returns:
         string: serialized json either [{setting data}] or {"error":"..."}
     """
+    logger = logging.getLogger(__name__)
+    logger.info("received request on endpoint '/setting/profile_list'.")
 
     return setting_controller.get_list_of_profiles()
