@@ -38,6 +38,14 @@ CREATE TABLE settings(
     sitting_height INT
 );
 
+CREATE TABLE logs (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    service_name VARCHAR(50),
+    log_level VARCHAR(10),
+    message TEXT
+);
+
 INSERT INTO heights (start_time, start_height) VALUES (CURRENT_TIMESTAMP(), 74);
 
 -- Insert data into the daily_totals table to set limit at when calculating values of past

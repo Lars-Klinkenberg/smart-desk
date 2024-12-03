@@ -1,5 +1,6 @@
-import logging
 from bottle import Bottle
+import bottle
+from api.controllers.log_controller import log_controller
 from routes.height_routes import height_server
 from routes.setting_routes import setting_server
 from routes.monitoring_routes import monitoring_server
@@ -29,18 +30,14 @@ def enable_cors_after_request_hook():
     """
     add_cors_headers()
 
+@mainApp.hook("before_request")
+def log_request_call():
+    log_controller.save_log("api", "INFO", f"recieved {bottle.request.method} on {bottle.request.fullpath}")
 
 if __name__ == "__main__":
-    logger = logging.getLogger(__name__)
-    logging.basicConfig(
-        filename="../logs/api.log",
-        encoding="utf-8",
-        level=logging.DEBUG,
-        format="%(asctime)s | %(levelname)s | %(message)s",
-    )
 
     try:
-        logger.info("starting api ...")
+        log_controller.save_log("api", "INFO", "starting api ...")
         mainApp.mount("/height", height_server)
         mainApp.mount("/setting", setting_server)
         mainApp.mount("/monitoring", monitoring_server)
@@ -49,6 +46,6 @@ if __name__ == "__main__":
         mainApp.install(EnableCors())
         mainApp.run(host="0.0.0.0", port=8080)
     except Exception:
-        logger.exception("Error while running main loop")
+        log_controller.save_log("api", "ERROR", "Error while running main loop")
     finally:
-        logger.info("Exited successfully")
+        log_controller.save_log("api", "INFO", "Exited successfully")
