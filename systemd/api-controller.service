@@ -3,11 +3,13 @@ Description=API Service for Smart Desk
 After=network.target
 
 [Service]
-# Set the working directory to the API folder
-WorkingDirectory=/home/desk/smart-desk/api
+# Set the working directory to the root of the project
+WorkingDirectory=/home/desk/smart-desk
 
-# Use the virtual environment to run the API service
-ExecStart=/bin/bash -c 'source /home/desk/smart-desk/venv/bin/activate && python main.py'
+EnvironmentFile=/home/desk/smart-desk/.env
+
+# Set PYTHONPATH to the root and run the script
+ExecStart=/bin/bash -c 'export PYTHONPATH=/home/desk/smart-desk && /home/desk/smart-desk/venv/bin/python api/main.py'
 
 # Restart on failure
 Restart=on-failure
@@ -15,6 +17,9 @@ Restart=on-failure
 # Set the user and group that the service will run under
 User=desk
 Group=desk
+
+# Ensure environment variables are inherited
+Environment="PYTHONUNBUFFERED=1"
 
 [Install]
 WantedBy=multi-user.target

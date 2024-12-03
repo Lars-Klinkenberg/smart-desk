@@ -1,7 +1,6 @@
 import json
 from bottle import Bottle, request
 from api.controllers.log_controller import log_controller
-from api.utils.log_service import read_logs
 from api.utils.monitoring_service import is_service_active
 from utils.enable_cors import add_cors_headers
 

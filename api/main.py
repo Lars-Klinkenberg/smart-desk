@@ -45,7 +45,7 @@ if __name__ == "__main__":
         # executes enable_cors on all routes (https://stackoverflow.com/questions/17262170/bottle-py-enabling-cors-for-jquery-ajax-requests)
         mainApp.install(EnableCors())
         mainApp.run(host="0.0.0.0", port=8080)
-    except Exception:
-        log_controller.save_log("api", "ERROR", "Error while running main loop")
+    except Exception as e:
+        log_controller.save_log("api", "ERROR", "Error while running main loop: ", e)
     finally:
         log_controller.save_log("api", "INFO", "Exited successfully")
