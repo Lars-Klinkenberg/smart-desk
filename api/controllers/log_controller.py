@@ -1,6 +1,5 @@
 from controllers.db_controller import DatabaseController
 import json
-from datetime import datetime
 
 
 class LogController(DatabaseController):

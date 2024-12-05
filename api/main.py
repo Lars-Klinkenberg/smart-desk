@@ -30,9 +30,13 @@ def enable_cors_after_request_hook():
     """
     add_cors_headers()
 
+
 @mainApp.hook("before_request")
 def log_request_call():
-    log_controller.save_log("api", "INFO", f"recieved {bottle.request.method} on {bottle.request.fullpath}")
+    log_controller.save_log(
+        "api", "INFO", f"recieved {bottle.request.method} on {bottle.request.fullpath}"
+    )
+
 
 if __name__ == "__main__":
 
@@ -48,4 +52,4 @@ if __name__ == "__main__":
     except Exception as e:
         log_controller.save_log("api", "ERROR", "Error while running main loop: ", e)
     finally:
-        log_controller.save_log("api", "INFO", "Exited successfully")
+        log_controller.save_log("api", "INFO", "Exited api main loop")

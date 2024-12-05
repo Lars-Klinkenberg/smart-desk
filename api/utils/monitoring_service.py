@@ -1,10 +1,8 @@
 import subprocess
-import logging
+from api.controllers import log_controller
 
 
 def is_service_active(service_name):
-    logger = logging.getLogger(__name__)
-
     try:
         # Run the systemctl command to check if the service is active
         result = subprocess.run(
@@ -18,5 +16,5 @@ def is_service_active(service_name):
         return result.stdout.strip() == "active"
 
     except Exception:
-        logger.exception(f"Failed to load service ({service_name}) status")
+        log_controller.save_log("api", "ERROR", f"Failed to load service ({service_name}) status")
         return False
