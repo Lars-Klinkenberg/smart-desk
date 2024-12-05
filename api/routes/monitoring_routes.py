@@ -46,19 +46,26 @@ def save_log():
     service_name = request.headers.get("service_name")
     level = request.headers.get("level")
     message = request.headers.get("message")
-    
+
     log_controller.save_log(service_name, level, message)
-    return json.dumps({"succes" : "saved log"})
+    return json.dumps({"succes": "saved log"})
 
 
 @monitoring_server.route("/logs")
 def get_api_logs():
     """
     returns the logs of a service
+    Request headers:
+    level: the level of the logs
+    service_name: name of the service
+    offset: the index of the first row to retrieve
+    limit: the number of rows to retrieve
 
     Returns:
         string: serialized json
     """
     log_level = request.headers.get("level")
     service_name = request.headers.get("service_name")
-    return log_controller.get_all_logs(service_name, log_level)
+    offset = request.headers.get("offset")
+
+    return log_controller.get_logs(log_level, service_name, offset, limit)
