@@ -4,8 +4,8 @@ After=network.target dev-ttyS0.device api-controller.service
 Requires=dev-ttyS0.device api-controller.service
 
 [Service]
-# Set the working directory to the Desk Controller folder
-WorkingDirectory=/home/desk/smart-desk/desk-controller
+# Set the working directory to the root of the project
+WorkingDirectory=/home/desk/smart-desk
 
 # Wait for the serial port to be available before starting the service
 ExecStartPre=/bin/bash -c 'for i in {1..300}; do [ -e /dev/ttyS0 ] && break || sleep 1; done'
@@ -14,8 +14,10 @@ ExecStartPre=/bin/bash -c 'for i in {1..300}; do [ -e /dev/ttyS0 ] && break || s
 PermissionsStartOnly=true
 ExecStartPre=/usr/bin/chmod 777 /dev/ttyS0
 
-# Activate the virtual environment and run main.py for the desk-controller
-ExecStart=/bin/bash -c 'source /home/desk/smart-desk/venv/bin/activate && python main.py'
+EnvironmentFile=/home/desk/smart-desk/.env
+
+# Set PYTHONPATH to the root and run the script
+ExecStart=/bin/bash -c 'export PYTHONPATH=/home/desk/smart-desk && /home/desk/smart-desk/venv/bin/python desk-controller/main.py'
 
 Restart=always
 # wait 30s between restarts
