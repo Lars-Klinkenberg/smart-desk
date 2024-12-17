@@ -1,0 +1,63 @@
+<div class="header">
+  <h1>Logs</h1>
+  <div class="select">
+    <mat-form-field>
+      <mat-select
+        [(value)]="selectedSource"
+        (selectionChange)="detectSelectChanges($event)"
+        [disabled]="isLoadingResults"
+      >
+        @for (source of availableSources; track source) {
+        <mat-option [value]="source">{{ source }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+<section class="table-container">
+  <table mat-table [dataSource]="dataSource" matSort *ngIf="!isLoadingResults">
+    <ng-container matColumnDef="time">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        sortActionDescription="Sort by time"
+      >
+        Time
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.timestamp }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="level">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        sortActionDescription="Sort by level"
+      >
+        Level
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.log_level }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="message">
+      <th mat-header-cell *matHeaderCellDef>Message</th>
+      <td mat-cell *matCellDef="let element">{{ element.message }}</td>
+    </ng-container>
+
+    <tr
+      mat-header-row
+      *matHeaderRowDef="displayedColumns; sticky: true"
+      class="row"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      class="row"
+    ></tr>
+  </table>
+  <div class="loadingSpinner" *ngIf="isLoadingResults">
+    <mat-spinner></mat-spinner>
+  </div>
+</section>

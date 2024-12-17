@@ -1,0 +1,30 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+
+
+table {
+    width: 100%;
+}
+
+.table-container {
+    max-height: 500px;
+    overflow: auto;
+    background-color: none;
+
+    .row {
+        color: #c7c7c7;
+        background-color: #232327;
+    }
+
+    .loadingSpinner {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 50px;
+    }
+}
