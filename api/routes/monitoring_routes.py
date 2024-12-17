@@ -67,5 +67,6 @@ def get_api_logs():
     log_level = request.headers.get("level")
     service_name = request.headers.get("service_name")
     offset = request.headers.get("offset")
+    limit = request.headers.get("limit")
 
     return log_controller.get_logs(log_level, service_name, offset, limit)

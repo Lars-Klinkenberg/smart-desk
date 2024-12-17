@@ -51,8 +51,10 @@ class LogController(DatabaseController):
             )
         return rows
 
-    def get_logs(self, level=None, service_name=None, offset=0, limit=50):
+    def get_logs(self, level=None, service_name=None, offset=None, limit=None):
         conditions = []
+        log_offset = offset or 0
+        log_limit = limit or 50
 
         if level:
             conditions.append(f"log_level = '{level}'")
@@ -63,7 +65,7 @@ class LogController(DatabaseController):
 
         if conditions:
             query += " WHERE " + " AND ".join(conditions)
-        query += f" ORDER BY timestamp DESC LIMIT {offset}, {limit};"
+        query += f" ORDER BY timestamp DESC LIMIT {log_offset}, {log_limit};"
 
         try:
             cursor = self.execute_query(query)
