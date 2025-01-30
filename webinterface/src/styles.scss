@@ -1,3 +1,5 @@
+@use '@angular/material'as mat;
+
 /* Global styles */
 html,
 body {
@@ -8,4 +10,18 @@ body {
     padding: 0;
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+    @include mat.select-overrides((panel-background-color: #232327,
+            enabled-trigger-text-color: #c7c7c7,
+            disabled-trigger-text-color: red,
+            placeholder-text-color: green,
+        ));
+
+    @include mat.option-overrides((selected-state-label-text-color: white,
+            label-text-color: #c7c7c7,
+        ));
 }
