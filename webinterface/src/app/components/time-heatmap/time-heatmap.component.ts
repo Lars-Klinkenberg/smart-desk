@@ -32,11 +32,10 @@ export const Weekdays = [
 export const Start_year = 2024;
 
 @Component({
-  selector: 'time-heatmap',
-  standalone: true,
-  imports: [CommonModule, MatTooltipModule, MatSelectModule],
-  templateUrl: './time-heatmap.component.html',
-  styleUrl: './time-heatmap.component.scss',
+    selector: 'time-heatmap',
+    imports: [CommonModule, MatTooltipModule, MatSelectModule],
+    templateUrl: './time-heatmap.component.html',
+    styleUrl: './time-heatmap.component.scss'
 })
 export class TimeHeatmapComponent implements OnInit {
   MONTHS = Months;

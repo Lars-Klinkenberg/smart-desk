@@ -2,11 +2,10 @@ import { AfterViewInit, Component } from '@angular/core';
 import { TimeService } from '../../services/time.service';
 
 @Component({
-  selector: 'app-stats',
-  standalone: true,
-  imports: [],
-  templateUrl: './stats.component.html',
-  styleUrl: './stats.component.scss',
+    selector: 'app-stats',
+    imports: [],
+    templateUrl: './stats.component.html',
+    styleUrl: './stats.component.scss'
 })
 export class StatsComponent implements AfterViewInit {
   todaysStandingTime = '--:--:--';

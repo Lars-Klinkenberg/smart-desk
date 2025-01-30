@@ -11,20 +11,19 @@ import { CommonModule } from '@angular/common';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-log',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatInputModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatSortModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule,
-  ],
-  templateUrl: './log.component.html',
-  styleUrl: './log.component.scss',
+    selector: 'app-log',
+    imports: [
+        CommonModule,
+        MatInputModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatSortModule,
+        MatProgressSpinnerModule,
+        MatPaginatorModule,
+    ],
+    templateUrl: './log.component.html',
+    styleUrl: './log.component.scss'
 })
 export class LogComponent {
   @ViewChild(MatSort) sort!: MatSort;

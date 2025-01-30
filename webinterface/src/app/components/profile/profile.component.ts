@@ -6,11 +6,10 @@ import { Setting } from '../../models/Setting';
 import { SettingService } from '../../services/setting.service';
 
 @Component({
-  selector: 'app-profile',
-  standalone: true,
-  imports: [MatInputModule, MatSelectModule, MatFormFieldModule],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss',
+    selector: 'app-profile',
+    imports: [MatInputModule, MatSelectModule, MatFormFieldModule],
+    templateUrl: './profile.component.html',
+    styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
   @Output() selectionChange = new EventEmitter<Setting>();
