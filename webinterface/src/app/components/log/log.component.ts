@@ -8,6 +8,7 @@ import { LogService } from '../../services/log.service';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-log',
@@ -20,6 +21,7 @@ import { CommonModule } from '@angular/common';
     MatTableModule,
     MatSortModule,
     MatProgressSpinnerModule,
+    MatPaginatorModule,
   ],
   templateUrl: './log.component.html',
   styleUrl: './log.component.scss',

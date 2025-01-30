@@ -28,7 +28,7 @@
         border-radius: 2px;
 
         &[data-level="no-data"] {
-            background-color: #cacaca;
+            background-color: #2b2a33;
         }
 
         &[data-level="1"] {
@@ -52,20 +52,32 @@
 
     .month-odd {}
 
-    .legend {
-        float: right;
+    
+    .info-container{
         display: flex;
-        flex-direction: row;
-        align-self: flex-end;
-        margin: 10px;
+        justify-content: space-between;
 
-        .label {
-            margin: 0 5px;
+        .legend {
+            float: right;
+            display: flex;
+            flex-direction: row;
+            align-self: flex-end;
+            margin: 10px;
+    
+            .label {
+                margin: 0 5px;
+            }
+    
+            .box {
+                margin: 1px;
+            }
         }
-
-        .box {
-            margin: 1px;
+    
+        #year-select{
+            width: 100px;
+            margin-left: 20px;
+            color: #c7c7c7;
         }
     }
-
 }
+

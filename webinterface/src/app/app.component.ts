@@ -8,6 +8,7 @@ import { PreviousDayStatsComponent } from './components/previous-day-stats/previ
 import { BarChartComponent } from './components/bar-chart/bar-chart.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { Setting } from './models/Setting';
+import { LogComponent } from './components/log/log.component';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ import { Setting } from './models/Setting';
     PreviousDayStatsComponent,
     BarChartComponent,
     ProfileComponent,
+    LogComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

@@ -15,7 +15,7 @@ export interface Log {
 }
 
 export enum LogSource {
-    DESK_CONTROLLER = "controller",
+    DESK_CONTROLLER = "desk_controller",
     API = "api",
     DAILY_JOB = "jobs/daily",
     MONTHLY_JOB = "jobs/monthly"

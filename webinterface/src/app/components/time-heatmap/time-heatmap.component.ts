@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TimeService } from '../../services/time.service';
-import { Observable } from 'rxjs';
-import { DailyActivity } from '../../models/DailyActivity';
+import { MatSelectModule } from '@angular/material/select';
 
 export const Months = [
   'January',
@@ -30,10 +29,12 @@ export const Weekdays = [
   'Saturday',
 ];
 
+export const Start_year = 2024;
+
 @Component({
   selector: 'time-heatmap',
   standalone: true,
-  imports: [CommonModule, MatTooltipModule],
+  imports: [CommonModule, MatTooltipModule, MatSelectModule],
   templateUrl: './time-heatmap.component.html',
   styleUrl: './time-heatmap.component.scss',
 })
@@ -43,14 +44,17 @@ export class TimeHeatmapComponent implements OnInit {
 
   year: Date[] = [];
   heightData = new Map<string, number>();
+  selected_year = Start_year;
 
   constructor(private readonly timeService: TimeService) {}
 
   ngOnInit(): void {
     let currentYear = new Date().getFullYear();
+    this.selected_year = currentYear;
+
     this.year = [];
-    this.year.push(...this.getAllDaysOfYear(currentYear));
-    this.loadHeightData(currentYear);
+    this.year.push(...this.getAllDaysOfYear(this.selected_year));
+    this.loadHeightData(this.selected_year);
   }
 
   /**
@@ -136,7 +140,7 @@ export class TimeHeatmapComponent implements OnInit {
   loadHeightData(year: number) {
     this.heightData.clear();
 
-    this.timeService.getDailyActivity().subscribe((data) => {
+    this.timeService.getDailyActivity(year).subscribe((data) => {
       this.getAllDaysOfYear(year).forEach((day) => {
         let hasDataValues = data.filter((activity) => {
           if (!activity.day) return;
@@ -178,5 +182,23 @@ export class TimeHeatmapComponent implements OnInit {
     });
 
     return daysOfMonth.length.toString();
+  }
+
+  getSelectableYears(): number[] {
+    let currentYear = new Date().getFullYear();
+    let selectableYears = [];
+
+    while (currentYear >= Start_year) {
+      selectableYears.push(currentYear);
+
+      currentYear--;
+    }
+
+    return selectableYears;
+  }
+
+  detectYearChanges(event:any){
+    this.year.push(...this.getAllDaysOfYear(this.selected_year));
+    this.loadHeightData(this.selected_year);
   }
 }

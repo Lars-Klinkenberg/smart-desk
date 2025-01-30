@@ -10,10 +10,10 @@ import { DailyActivity } from '../models/DailyActivity';
 export class TimeService {
   constructor(private http: HttpClient) {}
 
-  getDailyActivity(): Observable<DailyActivity[]> {
-    const baseHeaders = new HttpHeaders().set('year', '2024');
+  getDailyActivity(year: number): Observable<DailyActivity[]> {
+    const baseHeaders = new HttpHeaders().set('year', year.toString());
     return this.http.get<DailyActivity[]>(environment.BASE_URL + '/height/total/year', {
-      headers: baseHeaders.set('year', '2024'),
+      headers: baseHeaders.set('year', year.toString()),
     });
   }
 

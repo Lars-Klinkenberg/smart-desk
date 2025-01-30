@@ -30,14 +30,23 @@
       </tr>
     </tbody>
   </table>
-  <div class="legend">
-    <div class="label">Less</div>
-    <div
-      class="box"
-      *ngFor="let level of [0, 1, 2, 3, 4]"
-      [attr.data-level]="level"
-      matTooltip="{{ level * 0.25 * 60 + 'min' }}"
-    ></div>
-    <div class="label">More</div>
+  <div class="info-container">
+    <div id="year-select">
+      <mat-select [(value)]="selected_year" (selectionChange)="detectYearChanges($event)">
+        @for (year of getSelectableYears(); track year) {
+        <mat-option value="{{year}}">{{ year }}</mat-option>
+        }
+      </mat-select>
+    </div>
+    <div class="legend">
+      <div class="label">Less</div>
+      <div
+        class="box"
+        *ngFor="let level of [0, 1, 2, 3, 4]"
+        [attr.data-level]="level"
+        matTooltip="{{ level * 0.25 * 60 + 'min' }}"
+      ></div>
+      <div class="label">More</div>
+    </div>
   </div>
 </div>

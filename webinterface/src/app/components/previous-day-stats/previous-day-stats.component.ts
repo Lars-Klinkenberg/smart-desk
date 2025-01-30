@@ -19,9 +19,7 @@ export class PreviousDayStatsComponent implements AfterViewInit {
         if (!activity.height) return;
 
         if (activity.height == 115) {
-          this.standingTime = this.timeService.formatMinutesToTimeString(
-            Number(activity.total_time)
-          );
+          this.standingTime = activity.total_time;
         }
       });
     });
