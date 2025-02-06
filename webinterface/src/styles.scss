@@ -1,10 +1,13 @@
 @use '@angular/material'as mat;
 
+$text-color: #c7c7c7;
+$background-color: #232327;
+
 /* Global styles */
 html,
 body {
-    background-color: #232327;
-    color: #c7c7c7;
+    background-color: $background-color;
+    color: $text-color;
     height: 100vh;
     width: 100vw;
     padding: 0;
@@ -15,13 +18,14 @@ body {
 
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
 :root {
-    @include mat.select-overrides((panel-background-color: #232327,
-            enabled-trigger-text-color: #c7c7c7,
+    @include mat.select-overrides((panel-background-color: $background-color,
+            enabled-trigger-text-color: $text-color,
             disabled-trigger-text-color: red,
             placeholder-text-color: green,
+            enabled-arrow-color: $text-color,
         ));
 
     @include mat.option-overrides((selected-state-label-text-color: white,
-            label-text-color: #c7c7c7,
+            label-text-color: $text-color,
         ));
 }

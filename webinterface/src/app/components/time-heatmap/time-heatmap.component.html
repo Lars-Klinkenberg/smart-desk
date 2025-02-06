@@ -18,7 +18,7 @@
           </span>
         </th>
         <td
-          *ngFor="let day of getAllDaysByDayOfWeek(week, year)"
+          *ngFor="let day of getAllDaysByDayOfWeek(week, daysOfYear)"
           [ngClass]="getClassname(day)"
         >
           <div
@@ -32,7 +32,7 @@
   </table>
   <div class="info-container">
     <div id="year-select">
-      <mat-select [(value)]="selected_year" (selectionChange)="detectYearChanges($event)">
+      <mat-select [(value)]="dropdownYear" (selectionChange)="detectYearChanges($event)">
         @for (year of getSelectableYears(); track year) {
         <mat-option value="{{year}}">{{ year }}</mat-option>
         }

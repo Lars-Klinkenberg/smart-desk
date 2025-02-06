@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TimeService } from '../../services/time.service';
 import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 export const Months = [
   'January',
@@ -32,28 +34,35 @@ export const Weekdays = [
 export const Start_year = 2024;
 
 @Component({
-    selector: 'time-heatmap',
-    imports: [CommonModule, MatTooltipModule, MatSelectModule],
-    templateUrl: './time-heatmap.component.html',
-    styleUrl: './time-heatmap.component.scss'
+  selector: 'time-heatmap',
+  imports: [
+    CommonModule,
+    MatTooltipModule,
+    MatSelectModule,
+    MatInputModule,
+    FormsModule,
+  ],
+  templateUrl: './time-heatmap.component.html',
+  styleUrl: './time-heatmap.component.scss',
 })
 export class TimeHeatmapComponent implements OnInit {
+  // axis labels
   MONTHS = Months;
   WEEKDAYS = Weekdays;
-
-  year: Date[] = [];
+  // data
+  daysOfYear: Date[] = [];
   heightData = new Map<string, number>();
-  selected_year = Start_year;
+  // year
+  selectedYear = new Date().getFullYear()
+  dropdownYear = this.selectedYear.toString(); // year that gets displayed in dropdown. changes in dropdown will affect this
+  // if year in dropdown value is number the initial value can not be displayed
 
   constructor(private readonly timeService: TimeService) {}
 
   ngOnInit(): void {
-    let currentYear = new Date().getFullYear();
-    this.selected_year = currentYear;
-
-    this.year = [];
-    this.year.push(...this.getAllDaysOfYear(this.selected_year));
-    this.loadHeightData(this.selected_year);
+    this.daysOfYear = [];
+    this.daysOfYear.push(...this.getAllDaysOfYear(this.selectedYear));
+    this.loadHeightData(this.selectedYear);
   }
 
   /**
@@ -175,7 +184,7 @@ export class TimeHeatmapComponent implements OnInit {
    * @returns
    */
   getMonthColWidth(month: string): string {
-    let firstRow = this.getAllDaysByDayOfWeek(1, this.year);
+    let firstRow = this.getAllDaysByDayOfWeek(1, this.daysOfYear);
     let daysOfMonth = firstRow.filter((day) => {
       return day.getMonth() == this.MONTHS.indexOf(month);
     });
@@ -196,8 +205,9 @@ export class TimeHeatmapComponent implements OnInit {
     return selectableYears;
   }
 
-  detectYearChanges(event:any){
-    this.year.push(...this.getAllDaysOfYear(this.selected_year));
-    this.loadHeightData(this.selected_year);
+  detectYearChanges(event: any) {
+    this.selectedYear = Number(this.dropdownYear);
+    this.daysOfYear = this.getAllDaysOfYear(this.selectedYear);
+    this.loadHeightData(this.selectedYear);
   }
 }
