@@ -20,12 +20,17 @@ body {
 :root {
     @include mat.select-overrides((panel-background-color: $background-color,
             enabled-trigger-text-color: $text-color,
-            disabled-trigger-text-color: red,
-            placeholder-text-color: green,
+            disabled-trigger-text-color: black,
             enabled-arrow-color: $text-color,
         ));
 
     @include mat.option-overrides((selected-state-label-text-color: white,
             label-text-color: $text-color,
+        ));
+
+    @include mat.form-field-overrides((filled-focus-active-indicator-color: $text-color,
+            filled-container-color: $background-color,
+            filled-label-text-color: $text-color,
+            focus-select-arrow-color: $text-color,
         ));
 }

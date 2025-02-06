@@ -32,9 +32,12 @@
   </table>
   <div class="info-container">
     <div id="year-select">
-      <mat-select [(value)]="dropdownYear" (selectionChange)="detectYearChanges($event)">
+      <mat-select
+        [(value)]="dropdownYear"
+        (selectionChange)="detectYearChanges($event)"
+      >
         @for (year of getSelectableYears(); track year) {
-        <mat-option value="{{year}}">{{ year }}</mat-option>
+        <mat-option value="{{ year }}">{{ year }}</mat-option>
         }
       </mat-select>
     </div>
