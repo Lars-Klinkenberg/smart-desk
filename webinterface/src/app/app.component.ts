@@ -1,30 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
 import { TimeHeatmapComponent } from './components/time-heatmap/time-heatmap.component';
-import { HistoryComponent } from './components/history/history.component';
 import { StatsComponent } from './components/stats/stats.component';
-import { PreviousDayStatsComponent } from './components/previous-day-stats/previous-day-stats.component';
-import { BarChartComponent } from './components/bar-chart/bar-chart.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { Setting } from './models/Setting';
 import { LogComponent } from './components/log/log.component';
 
 @Component({
-    selector: 'app-root',
-    imports: [
-        CommonModule,
-        RouterOutlet,
-        TimeHeatmapComponent,
-        HistoryComponent,
-        StatsComponent,
-        PreviousDayStatsComponent,
-        BarChartComponent,
-        ProfileComponent,
-        LogComponent
-    ],
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+  selector: 'app-root',
+  imports: [
+    CommonModule,
+    TimeHeatmapComponent,
+    StatsComponent,
+    ProfileComponent,
+    LogComponent,
+  ],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   title = 'webinterface';
